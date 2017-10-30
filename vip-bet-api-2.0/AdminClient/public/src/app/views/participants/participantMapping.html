@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{message|translate}}</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{'provider'|translate}}</label>
+            <div class="col-sm-10">
+                <select class="form-control m-b" ng-init="provider=providers[0];onProviderChange()" ng-options="item as item.name for item in providers"
+                    ng-model="provider" ng-change="onProviderChange()">
+                </select>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{'existingMappings'|translate}}
+                <button class="pull-right btn btn-rounded btn-sm btn-icon btn-default margin-top--5" ng-click="onAddMapping()"><i
+                        class="fa fa-plus"></i></button>
+            </div>
+            <table class="table table-striped m-b-none" ng-show="mappings.length>0">
+                <thead>
+                    <tr>
+                        <th>{{'systemObjectName'|translate}}</th>
+                        <th>{{'providerObjectName'|translate}}</th>
+                        <th style="width: 1px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="map in mappings">
+                        <td>{{selectedParticipant.name}}</td>
+                        <td style="width: 50%">
+                            <ui-select ng-model="map.providerParticipant">
+                                <ui-select-match placeholder="Select ...">
+                                    {{$select.selected.provider_participant_name | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in unmapped | filter: $select.search" refresh="searchParticipant($select)" refresh-delay="500">
+                                    <span ng-bind-html="item.provider_participant_name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </td>
+                        <td>
+                            <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="removeMapping(map)"><i class="fa fa-trash-o"></i>
+                        </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">{{no|translate}}</button>
+    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok()">{{yes|translate}}</button>
+</div>

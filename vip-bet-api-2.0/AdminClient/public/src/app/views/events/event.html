@@ -1,0 +1,72 @@
+<button class="btn m-b-xs btn-sm btn-default btn-rounded ng-scope" ui-sref="app.events.search" style="position: absolute; margin-left: 15px; margin-top: 15px;">
+    <i class="fa fa-search"></i> {{'back'|translate}}
+</button>
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3 text-center">{{eventDetails.name}}</h1>
+    <h1 class="m-n font-thin h5 text-center">{{eventDetails.start_date | date:'dd-MM-yyyy HH:mm'}}</h1>
+</div>
+
+<div class="wrapper-md">
+    <div class="row" ng-show="eventDetails.status!=eventStatus.CLOSED">
+        <div style="position: absolute; left: calc(50% + 25px); top: calc(50% - 25px);" ng-show="loading">
+            <img src="/src/img/ring.svg" />
+        </div>
+        <div class="panel panel-default" ng-show="eventMarkets.length>0">
+            <table class="table table-striped m-b-none">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">{{'name'|translate}}</th>
+                        <th>
+                            <div style="margin-left: -4px; float: left;">
+                                <div ng-repeat="provider in providers" class="provider-top-icon">
+                                    <img style="width: 15px" ng-src="{{provider.icon_url}}" ng-click="changeEventProvider(provider)">
+                                </div>
+                            </div>
+                        </th>
+                        <th>{{'status'|translate}}</th>
+                    </tr>
+                </thead>
+            </table>
+            <div style="overflow-y: auto; height: calc(100vh - 250px);">
+                <table class="table table-striped m-b-none">
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="market in eventMarkets | orderBy:['order_id']" ng-class="{'row-selected':market.selected}" class="table-row-md">
+                            <td style="width: 20%">
+                                <div class="event-market-row">
+                                    <span>{{::market.name}}</span>
+                                </div>
+                                <div class="event-selection-row" ng-repeat="selection in market.selections | orderBy:['argument','column_index','row_index']">
+                                    <span>{{selection.name}}</span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="event-market-row">
+                                    <div ng-repeat="provider in providers" style="float: left; margin-right: 10px;">
+                                        <!--<label class="checkbox i-checks checkbox-sm m-l-md m-b-md" style="margin: 0px !important;">-->
+                                        <!--<input type="checkbox" class="ng-valid ng-dirty ng-valid-parse ng-touched ng-not-empty" aria-invalid="false"><i></i>-->
+                                        <!--</label>-->
+                                    </div>
+                                </div>
+                                <div class="event-selection-row" style="width: 100%" ng-repeat="selection in market.selections | orderBy:['argument','column_index','row_index']">
+                                    <div class="odd" ng-repeat="provider in providers">
+                                        {{getOdd(provider.id,selection.id) | number:2}}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <label ng-show="eventMarkets.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'noMarkets'|translate}}</label>
+    </div>
+    <div ng-show="eventDetails.status==eventStatus.CLOSED">
+        <h4 style="text-align: center; width: 100%;">{{'eventIsReadyForResulting'|translate}}</h4>
+        <a style="width: 100%; text-align: center; float: left;" ui-sref="app.results.event({'eventId':eventDetails.id})">{{'gotoResulting'|translate}}</a>
+    </div>
+</div>

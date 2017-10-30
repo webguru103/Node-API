@@ -1,0 +1,71 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.betslips'|translate}}</h1>
+</div>
+<div class="wrapper-md padding-top-5">
+    <div class="row">
+        <div class="panel panel-default margin-bottom-5">
+            <div class="panel-body no-padding-bottom">
+                <form role="form">
+                    <div class="form-group col-lg-3 no-padding-left">
+                        <label>{{'dateRange'|translate}}</label>
+                        <input date-range-picker placeholder="{{'dateRange'|translate}}" class="form-control date-picker" type="text" options="{autoApply}"
+                            ng-model="datePicker.date" />
+                    </div>
+                    <div class="col-lg-3 no-padding-left">
+                        <label>{{'status'|translate}}</label>
+                        <ui-select ng-model="filter.status" theme="bootstrap">
+                            <ui-select-match placeholder="{{'select'|translate}}...">
+                                {{$select.selected.name|translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in statuses | filter: $select.search">
+                                <span ng-bind-html="item.name|translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="radio margin-right-10 no-margin-top" style="float:left">
+                        <label class="i-checks" style="margin-top: 31px; float: left; margin-right: 5px;">
+                            <input type="checkbox" ng-model="filter.awaiting_result"><i></i>{{'awaitingResult'|translate}}
+                        </label>
+                    </div>
+                    <button class="btn btn-sm btn-primary" style="margin-top: 27px;" ng-click="searchBetslips()">
+                        <i class="fa fa-search"></i> {{'search'|translate}}
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+            <img src="/src/img/ring.svg" />
+        </div>
+        <div class="panel panel-default" style="overflow-y: auto; height: calc(100vh - 305px); margin-bottom: 5px" ng-show="betslips.length>0">
+            <table class="table table-striped m-b-none">
+                <thead>
+                    <tr>
+                        <th style="width: 9%; min-width: 125px;">{{'date'|translate}}</th>
+                        <th style="width: 100px;">{{'userId'|translate}}</th>
+                        <th style="width: 100px;">{{'type'|translate}}</th>
+                        <th>{{'events'|translate}}</th>
+                        <th>{{'placed'|translate}}</th>
+                        <th>{{'wonAmount'|translate}}</th>
+                        <th style="width: 60px;">{{'status'|translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="betslip in betslips" class="table-row-md text-sm" ng-dblclick="openBetslip(betslip)">
+                        <td>{{betslip.place_date | date:'dd-MM-yyyy HH:mm'}}</td>
+                        <td>{{betslip.user_id}}</td>
+                        <td>{{::getBetSlipType(betslip)}}</td>
+                        <td>{{::getBetSlipEventNames(betslip.details)}}</td>
+                        <td>{{betslip.amount}}</td>
+                        <td>{{betslip.won_amount}}</td>
+                        <td>{{betslipStatus[betslip.status_id]|translate}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center" ng-show="betslips.length>0">
+            <pagination direction-links="false" total-items="filter.totalItems" items-per-page="filter.perPage" ng-model="filter.currentPage"
+                num-pages="filter.maxPages" ng-change="onPageChange()" class="m-t-none m-b pagination-2 "></pagination>
+        </div>
+        <label ng-show="betslips.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'betslipsNotFound'|translate}}</label>
+    </div>
+</div>

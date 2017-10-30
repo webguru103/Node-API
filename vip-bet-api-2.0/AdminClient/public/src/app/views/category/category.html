@@ -1,0 +1,42 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.categories'|translate}}</h1>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="margin-left-15 margin-top-10">
+                <div class="btn-group dropdown" ng-show="permissions.includes('category_add')||permissions.includes('super_admin')">
+                    <button class="btn m-b-xs btn-sm btn-default margin-right-5" data-toggle="dropdown">
+                        <i class="fa fa-plus"></i> {{'add'|translate}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a ng-click="onAddCategory(true)">{{parentName|translate}}</a>
+                        </li>
+                        <li ng-show="childName!=null&&childName.length>0">
+                            <a ng-click="onAddCategory()">{{childName|translate}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <button ng-show="permissions.includes('category_mapping')||permissions.includes('super_admin')" class="btn m-b-xs btn-sm btn-default margin-left-5 margin-right-5" ng-click="onMapCategory()" ng-show="categorySelected&&selectedCategory.original.type_id!=categoryType.country">
+                    <i class="fa fa-random"></i> {{'mapping'|translate}}
+                </button>
+                <button ng-show="permissions.includes('category_edit')||permissions.includes('super_admin')" class="btn m-b-xs btn-sm btn-default margin-left-5 margin-right-5" ng-click="onEditCategory()" ng-show="categorySelected">
+                    <i class="fa fa-edit"></i> {{'edit'|translate}}
+                </button>
+                <button ng-show="permissions.includes('category_hide')||permissions.includes('super_admin')" class="btn m-b-xs btn-sm btn-default margin-left-5 margin-right-5" ng-click="showCategory(false)" ng-show="categorySelected&&selectedCategory.original.status_id==1">
+                    <i class="fa fa-eye-slash"></i> {{'hide'|translate}}
+                </button>
+                <button ng-show="permissions.includes('category_hide')||permissions.includes('super_admin')" class="btn m-b-xs btn-sm btn-default margin-left-5 margin-right-5" ng-click="showCategory(true)" ng-show="categorySelected&&selectedCategory.original.status_id!=1">
+                    <i class="fa fa-eye"></i> {{'show'|translate}}
+                </button>
+                <button ng-show="permissions.includes('category_delete')||permissions.includes('super_admin')" class="btn m-b-xs btn-sm btn-default margin-left-5 margin-right-5" ng-click="onDeleteCategory()" ng-show="categorySelected">
+                    <i class="fa fa-trash-o"></i> {{'delete'|translate}}
+                </button>
+            </div>
+            <div class="panel-body no-padding-top" style="height: calc(100vh - 245px); overflow-y: auto;">
+                <category-tree categories="categories" sortable="true" on-select-node="onSelectNode(node)"></category-tree>
+            </div>
+        </div>
+    </div>
+</div>

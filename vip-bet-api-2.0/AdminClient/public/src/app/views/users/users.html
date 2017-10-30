@@ -1,0 +1,97 @@
+<div ui-view class="fade-in-up">
+    <div class="bg-light lter b-b wrapper-md" style="height:67px">
+        <h1 class="m-n font-thin h3" style="float:left">{{'menu.users'|translate}}</h1>
+    </div>
+    <div class="wrapper-md padding-top-5">
+        <div class="row">
+            <div class="panel panel-default margin-bottom-5">
+                <div class="panel-body no-padding-bottom">
+                    <form role="form">
+                        <div class="form-group col-lg-4 no-padding-left">
+                            <label>{{'username'|translate}}</label>
+                            <input type="text" class="form-control" ng-model="filter.username" placeholder="{{'username'|translate}} ...">
+                        </div>
+                        <div class="form-group col-lg-4 no-padding-left">
+                            <label>{{'firstName'|translate}}</label>
+                            <input type="text" class="form-control" ng-model="filter.first_name" placeholder="{{'firstName'|translate}} ...">
+                        </div>
+                        <div class="form-group col-lg-4 no-padding-left">
+                            <label>{{'lastName'|translate}}</label>
+                            <input type="text" class="form-control" ng-model="filter.last_name" placeholder="{{'lastName'|translate}} ...">
+                        </div>
+                        <div class="form-group col-lg-4 no-padding-left">
+                            <label>{{'email'|translate}}</label>
+                            <input type="text" class="form-control" ng-model="filter.email" placeholder="{{'email'|translate}} ...">
+                        </div>
+                        <div class="form-group col-lg-4 no-padding-left">
+                            <label>{{'registrationDate'|translate}}</label>
+                            <input date-range-picker placeholder="{{'dateRange'|translate}}" class="form-control date-picker" type="text" options="{autoApply}"
+                                ng-model="datePicker.date" />
+                        </div>
+                        <div class="col-lg-4 no-padding-right no-padding-left">
+                            <label>{{'status'|translate}}</label>
+                            <div style="width: 100%; float: left;">
+                                <div class="radio margin-top-10 margin-right-10" style="float:left">
+                                    <label class="i-checks">
+                                <input type="radio" name="a" ng-model="filter.status_id" value=""><i></i>
+                                {{'all'|translate}}
+                            </label>
+                                </div>
+                                <div class="radio margin-top-10 margin-right-10" style="float:left">
+                                    <label class="i-checks">
+                                <input type="radio" name="a" ng-model="filter.status_id" value="{{userStatus.ACTIVE}}"><i></i>
+                                {{'active'|translate}}
+                            </label>
+                                </div>
+                                <div class="radio margin-top-10" style="float:left">
+                                    <label class="i-checks">
+                                <input type="radio" name="a" ng-model="filter.status_id" value="{{userStatus.BLOCKED}}"><i></i>
+                                {{'blocked'|translate}}
+                            </label>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-primary pull-right pull-right margin-right-15 margin-bottom-15" style="margin-top:-37px" ng-click="search()"><i
+                                class="fa fa-search"></i> {{'search'|translate}}
+                        </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+                <img src="/src/img/ring.svg" />
+            </div>
+            <div class="panel panel-default" style="overflow-y: auto; height: calc(100vh - 378px); margin-bottom: 5px" ng-show="users.length>0">
+                <table class="table table-striped m-b-none">
+                    <thead>
+                        <tr>
+                            <th>{{'username'|translate}}</th>
+                            <th>{{'firstName'|translate}}</th>
+                            <th>{{'lastName'|translate}}</th>
+                            <th>{{'email'|translate}}</th>
+                            <th>{{'registrationDate'|translate}}</th>
+                            <th>{{'status'|translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users" ng-dblclick="openUser(user)" ng-class="{'row-selected':user.selected}" ng-click="selectUser(user)"
+                            class="table-row-md text-sm">
+                            <td>
+                                <a ui-sref="{{::'app.users.user({id:'+user.id+'})'}}">{{user.username}}</a>
+                            </td>
+                            <td>{{user.first_name}}</td>
+                            <td>{{user.last_name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.registration_date | date:'dd-MM-yyyy HH:mm'}}</td>
+                            <td>{{userStatus[user.status_id]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center" ng-show="users.length>0">
+                <pagination direction-links="false" total-items="filter.totalItems" items-per-page="filter.limit" ng-model="filter.page"
+                    num-pages="filter.maxPages" ng-change="onPageChange()" class="m-t-none m-b pagination-2 "></pagination>
+            </div>
+            <label ng-show="users.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'usersNotFound'|translate}}</label>
+        </div>
+    </div>
+</div>

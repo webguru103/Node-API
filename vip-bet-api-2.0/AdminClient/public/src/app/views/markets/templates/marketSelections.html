@@ -1,0 +1,24 @@
+<div>
+    <button class="btn btn-success btn-sm" ng-click="addSelection()"><i class="fa fa-plus"></i>
+        {{'addSelection'|translate}}
+    </button>
+    <button class="btn btn-default btn-sm" ng-click="addSelectionColumn()"><i class="fa fa-plus"></i>
+        {{'addSelectionColumn'|translate}}
+    </button>
+
+</div>
+<div class="row container full-width">
+    <div ng-repeat="column in selections" class="item">
+        <div class="panel">
+            <div class="panel-body padding-left-right-2">
+                <div dnd-list="column" style="min-height: 30px">
+                    <div ng-repeat="selection in column" dnd-draggable="selection" dnd-moved="column.splice($index, 1)" dnd-effect-allowed="move"
+                        dnd-selected="selected = selection" class="btn btn-default full-width margin-bottom-5" ng-class="{'selected': selected === selection}"
+                        ng-dblclick="openSelectionForEdit(selection,column)">
+                        {{selection.name}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

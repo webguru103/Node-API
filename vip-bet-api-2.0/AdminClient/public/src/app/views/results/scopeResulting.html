@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-lg-6">
+        <h4 class="blue-bottom-line">{{'home'|translate}}</h4>
+        <div class="form-group" ng-repeat="statistic in statisticTypes">
+            <label class="col-sm-4 control-label">{{statistic.name}}</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" ng-model="statistic.home" ng-change="onStatScoreChange(statistic)">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <h4 class="blue-bottom-line">{{'away'|translate}}</h4>
+        <div class="form-group" ng-repeat="statistic in statisticTypes">
+            <label class="col-sm-4 control-label">{{statistic.name}}</label>
+            <div class="col-sm-8">
+                <input type="number" class="form-control" ng-model="statistic.away" ng-change="onStatScoreChange(statistic)">
+            </div>
+        </div>
+    </div>
+</div>

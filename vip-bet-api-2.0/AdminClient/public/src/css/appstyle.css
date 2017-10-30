@@ -1,0 +1,269 @@
+.padding-left-right-2 {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.padding-right-10 {
+    padding-right: 10px;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px;
+}
+
+.no-margin{
+    margin: 0px !important;
+}
+
+.padding-top-5 {
+    padding-top: 5px !important;
+}
+
+.hidden-category{
+    background-color: rgb(255, 209, 209);
+}
+
+.light-green-bg{
+    background-color: #e6ffe6;
+}
+
+.light-red-bg{
+    background-color: #ffe5e5;
+}
+
+.padding-bottom-10 {
+    padding-bottom: 10px !important;
+}
+
+.margin-10 {
+    margin: 10px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.margin-bottom-15 {
+    margin-bottom: 15px;
+}
+
+.no-margin-top {
+    margin-top: 0px !important;
+}
+
+.margin-top-10 {
+    margin-top: 10px !important;
+}
+
+.margin-left-15 {
+    margin-left: 15px;
+}
+
+.margin-left-10 {
+    margin-left: 10px;
+}
+
+.margin-left-5 {
+    margin-left: 5px !important;
+}
+
+.margin-left-3 {
+    margin-left: 3px !important;
+}
+
+.margin-right-5 {
+    margin-right: 5px !important;
+}
+
+.margin-right-10 {
+    margin-right: 10px !important;
+}
+
+.margin-right-15 {
+    margin-right: 15px !important;
+}
+
+.margin-right-20 {
+    margin-right: 20px !important;
+}
+
+.no-padding-top {
+    padding-top: 0px !important;;
+}
+
+.no-padding-bottom {
+    padding-bottom: 0px !important;
+}
+
+.margin-top--5 {
+    margin-top: -5px;
+}
+
+.no-padding-right {
+    padding-right: 0px;
+}
+
+.no-padding-left {
+    padding-left: 0px !important;
+}
+
+.float-left {
+    float: left;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.padding-left-5 {
+    padding-left: 5px;
+}
+
+.padding-right-5 {
+    padding-right: 5px;
+}
+
+.loading-text-center{
+    position: absolute; 
+    top: 50%; 
+    width: 100%; 
+    text-align: center;
+}
+.container {
+    display: flex; /* or inline-flex */
+    flex-wrap: nowrap;
+}
+
+.item {
+    flex: 1 1;
+}
+
+.row-selected td {
+    background-color: #afe6ff !important;
+}
+
+.box-center {
+    position: absolute;
+    top: 50%;
+}
+
+.table-row-md td {
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+}
+
+.event-market-row {
+    font-weight: bold;
+    border-bottom: solid 1px;
+    border-color: darkturquoise;
+    height: 21px;
+}
+
+.blue-bottom-line {
+    border-bottom: solid 1px;
+    border-color: darkturquoise;
+}
+
+.event-selection-row {
+    border-bottom: 1px solid;
+    border-bottom-color: aliceblue;
+    height: 21px;
+}
+
+.event-selection-row-l {
+    border-bottom: 1px solid;
+    border-bottom-color: aliceblue;
+    height: 30px;
+    padding-top: 5px;
+}
+
+.provider-selected {
+    border-bottom: solid 2px;
+    border-bottom-color: darkturquoise;
+}
+
+.checkbox-sm-selected {
+    top: 2px;
+    left: 2px;
+    width: 9px;
+    height: 9px;
+    background-color: darkturquoise;
+}
+
+.checkbox-sm i {
+    position: relative;
+    display: inline-block;
+    width: 15px !important;
+    height: 15px !important;
+    margin-top: -2px !important;
+    margin-right: 4px !important;
+    margin-left: -20px !important;
+    line-height: 1;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #cfdadd;
+}
+
+.odd {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 40px;
+    text-align: center;
+}
+
+.provider-top-icon {
+    float: left;
+    margin-right: 5px;
+    padding-bottom: 1px;
+    margin-left: 5px;
+    width: 40px;
+    text-align: center;
+}
+
+.pagination-2 a {
+    padding: 2px 10px !important;
+}
+
+.node-inactive {
+    color: red !important;
+}
+
+.node-active {
+    color: black !important;
+}
+
+.tab uib-tab-heading{
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    padding-left: 15px; 
+    padding-right: 15px;
+    margin-bottom: -1px; 
+    border-radius: 2px 2px 0 0;
+    border: 1px solid #ddd;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+}
+
+.tab uib-tab-heading:hover{
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    padding-left: 15px; 
+    padding-right: 15px;
+    margin-bottom: -1px; 
+    background-color: rgba(103, 103, 103, 0.11);
+    border-bottom-color: #dee5e7;
+    border: 1px solid transparent;
+}
+
+.tab uib-tab-heading:active{
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    padding-left: 15px; 
+    padding-right: 15px;
+    margin-bottom: -1px; 
+    background-color: #ffffff;
+    border-bottom-color: #fff !important;
+    border: 1px solid #ddd;
+}

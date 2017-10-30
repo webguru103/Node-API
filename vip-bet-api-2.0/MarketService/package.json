@@ -1,0 +1,23 @@
+{
+  "name": "marketservice",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "@types/bluebird": "^3.5.2",
+    "@types/http-status-codes": "^1.0.29",
+    "@types/knex": "0.0.44",
+    "@types/lodash": "^4.14.70",
+    "@types/pg-promise": "0.0.28",
+    "@types/uuid": "^2.0.29",
+    "bluebird": "^3.5.0",
+    "http-status-codes": "^1.2.0",
+    "knex": "^0.12.9",
+    "lodash": "^4.17.4",
+    "pg-promise": "^5.6.4",
+    "typescript": "^2.2.2",
+    "uuid": "^3.0.1"
+  }
+}

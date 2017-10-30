@@ -1,0 +1,125 @@
+<!-- list -->
+<ul class="nav">
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+        <span>{{'aside.nav.HEADER'|translate}}</span>
+    </li>
+    <li ui-sref-active="active" ng-show="permissions.includes('category_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.categories">
+            <i class="fa fa-reorder"></i>
+            <span>{{'menu.categories'|translate}}</span>
+        </a>
+    </li>
+    <li ui-sref-active="active" ng-show="permissions.includes('participant_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.participants">
+            <i class="fa fa-group"></i>
+            <span>{{'menu.participants'|translate}}</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-show="permissions.includes('market_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.markets">
+            <i class="fa fa-files-o"></i>
+            <span>{{'menu.markets'|translate}}</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-show="permissions.includes('event_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.events">
+            <i class="fa fa-calendar-check-o"></i>
+            <span>{{'menu.events'|translate}}</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-show="permissions.includes('result_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.results">
+            <i class="fa fa-tasks"></i>
+            <span>{{'menu.results'|translate}}</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-show="permissions.includes('betslips_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.betslips">
+            <i class="fa fa-file-text-o"></i>
+            <span>{{'menu.betslips'|translate}}</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-show="permissions.includes('user_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.users">
+            <i class="fa fa-address-card"></i>
+            <span>{{'menu.users'|translate}}</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-show="permissions.includes('admins_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.admins">
+            <i class="fa fa-user-circle-o"></i>
+            <span>{{'menu.admins'|translate}}</span>
+        </a>
+    </li>
+    <li ui-sref-active="active" ng-show="permissions.includes('providers_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.providers">
+            <i class="fa fa-rss"></i>
+            <span>{{'menu.providers'|translate}}</span>
+        </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.mapping')}" ng-show="permissions.includes('mapping_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.mapping">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="fa fa-random icon"></i>
+            <span>{{'menu.mapping.mapping'|translate}}</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active" ng-show="permissions.includes('mapping_league_view')||permissions.includes('super_admin')">
+                <a ui-sref="app.mapping.leagues">
+                    <span>{{'menu.mapping.leagues'|translate}}</span>
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="app.mapping.participants" ng-show="permissions.includes('mapping_participant_view')||permissions.includes('super_admin')">
+                    <span>{{'menu.mapping.participants'|translate}}</span>
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="app.mapping.warnings" ng-show="permissions.includes('mapping_warnings_view')||permissions.includes('super_admin')">
+                    <span>{{'menu.mapping.warnings'|translate}}</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.settings')}" ng-show="permissions.includes('settings_view')||permissions.includes('super_admin')">
+        <a ui-sref="app.settings">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="fa fa-cogs icon"></i>
+            <span>{{'menu.settings'|translate}}</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active" ng-show="permissions.includes('settings_scopes_view')||permissions.includes('super_admin')">
+                <a ui-sref="app.settings.scopes">
+                    <span>{{'menu.settings.scopes'|translate}}</span>
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="app.settings.statisticTypes" ng-show="permissions.includes('settings_statistic_types_view')||permissions.includes('super_admin')">
+                    <span>{{'menu.settings.statisticTypes'|translate}}</span>
+                </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="app.settings.resultRules" ng-show="permissions.includes('settings_result_rules_view')||permissions.includes('super_admin')">
+                    <span>{{'menu.settings.resultRules'|translate}}</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="line dk hidden-folded"></li>
+</ul>
+<!-- / list -->

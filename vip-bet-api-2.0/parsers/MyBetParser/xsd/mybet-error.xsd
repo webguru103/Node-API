@@ -1,0 +1,1057 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           xmlns:common="http://www.mybet.com/b2b/rest/jaxb/common"
+           xmlns:mybet="http://www.mybet.com/xmlns/error-codes"
+           xmlns="http://www.mybet.com/b2b/rest/jaxb/error"
+           targetNamespace="http://www.mybet.com/b2b/rest/jaxb/error">
+
+    <xs:import namespace="http://www.mybet.com/b2b/rest/jaxb/common" schemaLocation="mybet-common.xsd"/>
+
+    <xs:element name="ok-response">
+        <xs:annotation>
+            <xs:documentation>Returned in the entity (body) of the response if a resource method succeeded.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error-response-type"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="error-response">
+        <xs:annotation>
+            <xs:documentation>Returned in the entity (body) of the response if a resource method normally returning any
+                content type other than application/xml failed.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error-response-type"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="error-response-type">
+        <xs:annotation>
+            <xs:documentation>Supertype of all XML response types. Contains error details.
+                If a resource method succeeded:
+                the value of the error-occurred attribute of this type will be set to false;
+                the values of all other elements and attributes defined in this type SHALL NOT be accessed;
+                the values of elements and attributes defined in the concrete response element (subtype of this type)
+                CAN be accessed.
+                If a resource method failed:
+                the value of the error-occurred attribute of this type will be set to true;
+                the values of all other elements and attributes defined in this type CAN be accessed;
+                the values of elements and attributes defined in the concrete response element (subtype of this type)
+                SHALL NOT be accessed.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="error-http-status-code" type="http-status" minOccurs="0"/>
+            <xs:element name="error-code" type="error-code" minOccurs="0"/>
+            <xs:element name="error-detail-link" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to error-detail for code, which contains suggested translations.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="error-message" type="common:translated-message" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Message describing an error, to be shown to the user (in user's
+                        language) or to the developer (in default language == EN)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="error-caused-by-exception" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="name" type="xs:token"/>
+                        <xs:element name="message" type="xs:token"/>
+                        <xs:element name="stacktrace" type="xs:token" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="technical-error" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>A technical error shall NOT be shown to the end user.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="error-occurred" type="xs:boolean" use="required">
+            <xs:annotation>
+                <xs:documentation>If set to true, then the request has failed, else it has succeeded.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:element name="error-details">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error-response-type">
+                    <xs:sequence>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" ref="error-detail"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="error-detail">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error-response-type">
+                    <xs:sequence>
+                        <xs:element name="error-detail-http-status-code" type="http-status"/>
+                        <xs:element name="error-detail-error-code" type="error-code"/>
+                        <xs:element name="error-detail-description" type="xs:token"/>
+                        <xs:element maxOccurs="unbounded" name="error-detail-message" type="common:translated-message"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="http-status">
+        <xs:annotation>
+            <xs:documentation>Depending on the specific error we send a http error code:
+                200: Not an error;
+                2XX: Error depends on the business domain;
+                4XX: Error depends of wrong usage of the API;
+                5XX: Internal software error on the API provider side.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="100"/>
+            <xs:maxExclusive value="600"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="error-code">
+        <xs:annotation>
+            <xs:documentation>The values of type ErrorCodeEnum. We're using strings, so it will be
+                possible to add new ErrorCodes without changes at client side.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="error-code-enum">
+        <xs:restriction base="xs:token">
+
+            <xs:enumeration value="system" mybet:httpStatus="500">
+                <xs:annotation>
+                    <xs:documentation>Wrapper over all unexpected exception like Nullpointer, IndexOutOfBounds
+                        etc. (All typically thrown by mybet backend, REST framework, application server, etc.)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.masdown" mybet:httpStatus="503">
+                <xs:annotation>
+                    <xs:documentation>The mybet back-end (mAS) is down (thrown if the connection to the
+                        back-end is lost)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.illegal.argument" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>General error if the API was used in a wrong way.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.unknown.country" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>The country code is unknown.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.partner.walletws.not.reachable" mybet:httpStatus="503">
+                <xs:annotation>
+                    <xs:documentation>The b2b-partner seamless wallet integration webservice is not available.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.partner.walletws.malformed.url" mybet:httpStatus="500">
+                <xs:annotation>
+                    <xs:documentation>The endpoint-URL to the B2B partner's Seamless Wallet Integration web service is
+                        malformed.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.partner.login.required" mybet:httpStatus="401">
+                <xs:annotation>
+                    <xs:documentation>Action requires a valid partner authentication. An account can be requested
+                        by writing an email to b2b-team@anybet.de.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.partner.permission.required" mybet:httpStatus="403">
+                <xs:annotation>
+                    <xs:documentation>Action requires a specific partner permission. The specific permission can be
+                        requested
+                        by writing an email to b2b-team@anybet.de.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.entity.not.found" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Thrown if the request to the REST service contains an identifier
+                        (primary key) which is not existent.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.partner.external.wallets.not.supported" mybet:httpStatus="403">
+                <xs:annotation>
+                    <xs:documentation>This action is not supported for external wallets.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.partner.deposit.target.wallet.not.supported" mybet:httpStatus="403">
+                <xs:annotation>
+                    <xs:documentation>Deposits are currently only supported for the sportsbets wallet.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="system.user.payment.deposit.not.allowed" mybet:httpStatus="403">
+                <xs:annotation>
+                    <xs:documentation>Deposits are only allowed for users with product visibility "payment" enabled.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+
+            <!-- login/logout -->
+            <xs:enumeration value="login.banned" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User is banned from further logins by our customer care team.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.expired.or.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User login token expired or invalid.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.failed" mybet:httpStatus="202"/>
+            <xs:enumeration value="login.improper.licence" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User is banned from further logins by our customer care team.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.iovation.red" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User account has been temporarily suspended.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.ip.address.missing.or.invalid" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>User's IP address parameter is missing or invalid.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="login.new" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User is created but not already activated.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.otherwise.logged.in" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User is already logged in with another client which is forbidden by
+                        legal regulations.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.password.wrong" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Wrong username or password entered.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.password.wrongblocked" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Wrong password entered too many times. The user is blocked now.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.password.reset.but.not.changed" mybet:httpStatus="202"/>
+
+            <xs:enumeration value="login.player.is.excluded.from.play" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User self blocked the account.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.self.limited" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User limited himself from play for a self chosen amount of time.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.terms.not.accepted" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User did not accept terms of conditions yet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="login.unknown" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User login data is invalid.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.user.enabled" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Your account is already activated. Please login to utilise our entire
+                        range of services.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="login.user.sportsbets.notvisible" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User has no product visibility for 'sportsbets'.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <!-- place combination -->
+            <xs:enumeration value="placecombination.general.error" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Happens if the bet of an user could not be placed (general error for
+                        placing a bet).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="placecombination.exposure.limit.exceeded" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Happens if user does not have enough credit to place a bet.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.limit.exceeded" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>
+                        User places a bet exceeding at least one limit on a league, event, market etc.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="placecombination.not.enough.bets" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>One of the markets in the betslip requires a minimum of placed bets.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.odds.too.high" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User tries to place a bet with odds higher than allowed by the system.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.odds.too.low" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User tries to place a bet with odds lower than allowed by the system.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.not.permitted" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User tries to place a bet on a market, but placing bets on this market
+                        is not permitted by the system.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.player.protection.max.stake.exceeded"
+                            mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Related to the limit-system. Happens if the user has imposed betting
+                        limits to himself and he tries to place a stake higher than current available limit.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.stake.too.high" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Happens if the user tries to place a stake higher than permitted by the
+                        system.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.user.has.no.wallet" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User has no account.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.user.not.enabled" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>User is disabled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.outcome.odds.not.available" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>There are no odds available for an outcome.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.outcome.odds.changed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Odds for outcome have changed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.outcome.not.open" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>No bets on outcome allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.market.not.available" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Market not available for betting.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.event.bets.maximum" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Happens if the user has too many bets on event.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.market.bets.maximum" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Happens if the user has too many bets on market.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.slips.maximum" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Number of slips is limited.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.stake.too.low" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>There has to be a minimum stake.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.market.not.open" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Market is not open for betting.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.market.started" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Happens if the slip contains an already started market which is not
+                        open for live betting.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.missing.external.transaction.id" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>The mandatory external-transaction-id is missing.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="placecombination.user.currency.not.matched" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>The user account currency does not match the bet currency. Please place
+                        bets in the currency of the user account.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="bet-slip-details-request.place-date-from.before.allowed.date" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>place-date-from is before allowed date - only bets on events within the last 3
+                        months can be shown.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.activation.email.not.sent" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>An error occurred while sending the activation E-Mail. Please contact
+                        the customer care team.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.activationcode.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The activation code is incorrect.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.duplicate.account" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>As according to our T&amp;Cs, you are only allowed to have one user
+                        account. Withdrawals from a second account will be denied. If you believe you have
+                        received this message in error, please contact our Customer Care.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.expired" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Your customer number has expired.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.general.error.activate.user" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The activation code is incorrect.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.general.error.create.user" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The system could not complete your registration.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.illegal.username.chars" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>There are invalid characters in your username. Please use only a-z,
+                        0-9, '.', '_' or '-'.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.illegal.username.too.short" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a username with at least {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.illegal.username.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Username too long</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.invalid.currency.country.combination" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Currency is not allowed in specified country.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.unknown.currency" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Currency not known.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.improper.domain.access" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have accessed the wrong domain. Please continue on the correct
+                        domain.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.user.does.not.exist" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>There is no account with this username.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.username.already.exist" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>This username has already been assigned.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.idsearch.mismatch" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>For security reasons the details you have entered have to match the details on your passport.
+                        Your details didn't match, reasons for this could be a mismatch of address, name, middle name, etc.
+                        Please change your details to successfully complete your registration.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.invalid.domain.for.user.type" mybet:httpStatus="403">
+                <xs:annotation>
+                    <xs:documentation>Invalid domain for this user type (internal/external).</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.timezone.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Invalid timezone for internal registration.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.zipcode.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Invalid zipcode for internal registration.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="registration.required.data.missing" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Required data missing (e.g. username, password, etc.) for user registration.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.email" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>As according to our T&amp;Cs, you are only allowed to have one user
+                        account. Withdrawals from 2 accounts will be denied. The E-Mail address
+                        is already registered with another user account. If you believe you have received this
+                        message in error, please contact our Customer Care.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contact.email.address.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Contact E-Mail address is invalid.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contact.email.sending.failed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Contact E-Mail sending has failed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contact.invalid.format" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Invalid format: one of the given contacts.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contact.required.data.missing" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Required data missing (e.g. first name, e-mail address, topic, subject, etc.).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.fax" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Contact already exists</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.phone.home" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You are only allowed to have one user account. Withdrawals from a
+                        second account will be denied. If you believe you have received this message in error,
+                        please contact our Customer Care.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.phone.mobile" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You are only allowed to have one user account. Withdrawals from a
+                        second account will be denied. If you believe you have received this message in error,
+                        please contact our Customer Care.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.phone.office" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You are only allowed to have one user account. Withdrawals from a
+                        second account will be denied. If you believe you have received this message in error,
+                        please contact our Customer Care.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.poker.client.email" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>As according to our T&amp;Cs, you are only allowed to have one user
+                        account. Withdrawals from 2 accounts will be denied. The E-Mail address
+                        is already registered with another user account. If you believe you have received this
+                        message in error, please contact our Customer Care.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="contactExist.sms" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Contact already exists</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="login.failed.total.exceeded" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>
+                        All failed login attempts are stored. If user is reaching the threshold value, this exception is
+                        thrown.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <!-- change password error messages -->
+            <xs:enumeration value="profile-info.change-password.required.data.missing" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Validation error results for missing required data for change password resource.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="password.too.short" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a password with at least {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="password.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a password with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="password.same.as.username" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please choose a new password with at least {0} characters which is not the same as
+                        your user name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="password.contains.illegal.character" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please do not use white spaces in passwords.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="password.not.secure" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Your password is too simple. Please use upper and lower case characters
+                        and digits.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="status.unknown.external.transaction.id" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>the given external-transaction-id is not known.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="status.duplicate.external.transaction.id" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>the given external-transaction-id already exists.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="wallet-transaction-list-request.creation-date-from.before.allowed.date"
+                            mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>wallet creation-date-from is before allowed date - only transactions within the
+                        last 3
+                        months can be shown.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="wallet.transaction.description.translation.not.found" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>wallet transaction description translation cannot be found.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.limit.exceeded.max" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>maximum deposit limit exceeded.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.global.limit.exceeded.max" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>maximum global deposit limit exceeded.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.global.limit.below.min" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>below minimum global deposit limit.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.user.currency.not.matched" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>The user account currency does not match the currency of the deposit. Please use
+                        the currency
+                        of the target wallet.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.return.url.missing.or.invalid" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Return URLs are missing or invalid.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.status.no.longer.available" mybet:httpStatus="403">
+                <xs:annotation>
+                    <xs:documentation>Status can no longer be queried for this payment order.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="email.invalid.format" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Invalid E-Mail address.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="phone.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Phone number too long.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="phone.invalid.format" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Phone number invalid format.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="mobile-phone.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Mobile phone number too long.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="mobile-phone.invalid.format" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Mobile phone number invalid format.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="registration.data.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Registration data invalid.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.zip.code.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered postal code in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.zip.code.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a postal code with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.zip.code.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter your postcode here.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.city.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered city name in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.city.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a city name with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.city.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter the name of your city here.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.country.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered country name in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.country.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a country name with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.country.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter the name of your country here.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.street.name.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered street name in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.street.name.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The name of the street can be only {0} chars long.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.street.name.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a street.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.number.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered number in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.number.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The house number can be only {0} chars long.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.number.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter your house number.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.name.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered name in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.name.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a name with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.name.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter name.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.first.name.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered first name in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.first.name.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a first name with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.first.name.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter first name.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.name.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered house name in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.name.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a house name with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.name.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter house name.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.extension.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered house extension in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.extension.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a house extension with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.house.extension.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter house extension.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.state.not.allowed" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have entered state in format that is not allowed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.state.too.long" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter a state with a maximum of {0} characters.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="address.state.required" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please enter state.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="currency.information.not.available" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Currency Information is not available.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="partnercode.not.valid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Partner Code is not valid.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="user.profile.update.required.data.missing" mybet:httpStatus="400">
+                <xs:annotation>
+                    <xs:documentation>Required data missing (e.g. username, last name, etc.) for user profile update.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="user.profile.update.data.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Input data invalid (e.g. phone number, last name, etc.) for user profile update.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="user.profile.update.general.error" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The system could not update your user profile.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="user.profile.loyalty.card.not.supported" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The current action is not supported for loyalty card users.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="action.not.allowed.for.user.domain" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Your domain is not allowed to perform this action.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="email.in.blacklist" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>Please provide a permanent email address.
+                        Otherwise the activation link will not function correctly and other important email cannot be delivered.
+                        Your information will not be provided to third parties.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="bonus.code.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The bonus code is not valid, it may either be wrong, not eligible for sports bets,
+                        activated already or expired.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="loyalty.card.not.found" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The user has no active loyalty card.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="loyalty.card.security.level.not.found" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The user has no security level for loyalty card. Security level cannot be updated.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="password.authentication.code.invalid" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>The entered authentication-code is wrong, or expired.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="forgot.password.already.requested" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>An authentication code has been requested recently. If you did not receive the code try again in 5 minutes.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="deposit.limit.unverified.user" mybet:httpStatus="202">
+                <xs:annotation>
+                    <xs:documentation>You have exceeded the maximum deposit limit of €800. We can remove this limit as soon as your account has been verified. Please email our support team for more information: support@mybet.com
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

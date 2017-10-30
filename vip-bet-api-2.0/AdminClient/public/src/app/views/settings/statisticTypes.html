@@ -1,0 +1,54 @@
+<div class="bg-light lter b-b wrapper-md" style="height:67px">
+    <h1 class="m-n font-thin h3" style="float:left">{{'menu.settings.statisticTypes'|translate}}</h1>
+    <button class="btn btn-sm btn-success pull-left btn-rounded btn-icon" style="float: left !important; margin-left: 15px;"
+        ng-click="add()"><i class="fa fa-plus"></i></button>
+</div>
+<div class="wrapper-md padding-top-5">
+    <div class="row">
+        <div class="panel panel-default margin-bottom-5">
+            <div class="panel-body no-padding-bottom">
+                <form role="form">
+                    <div class="col-lg-3 no-padding-left no-padding-right">
+                        <label>{{'sport'|translate}}</label>
+                        <ui-select ng-init="filter.sport=sports[0]; search();" ng-model="filter.sport" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in sports | filter: $select.search">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <label>{{'name'|translate}}</label>
+                        <input type="text" class="form-control" ng-model="filter.name" placeholder="{{'name'|translate}} ...">
+                    </div>
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <button class="btn btn-sm btn-primary" style="margin-top: 25px; margin-left: 10px;" ng-click="search()">
+                            <i class="fa fa-search"></i> {{'search'|translate}}
+                         </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+            <img src="/src/img/ring.svg" />
+        </div>
+        <div class="panel panel-default" style="overflow-y: auto; height: calc(100vh - 260px); margin-bottom: 5px" ng-show="statisticTypes.length>0">
+            <ul ui-sortable="sortableOptions" ng-model="statisticTypes" class="list-group gutter list-group-lg list-group-sp">
+                <li class="list-group-item padding-top-5" style="margin-bottom: 0px; border-bottom: none; padding-bottom: 5px !important; padding-left:10px"
+                    ng-repeat="stype in statisticTypes">
+                    <div class="pull-right">
+                        <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="delete(stype)"><i class="fa fa-trash-o"></i></button>
+                        <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="update(stype)"><i class="fa fa-save"></i></button>
+                    </div>
+                    <div class="pull-left">
+                        <i class="fa fa-reorder" style="color:#bdbdbd; margin-right:10px; margin-top:10px;"></i>
+                    </div>
+                    <div class="clear padding-right-10"><input type="text" class="form-control" ng-model="stype.name" placeholder="{{'name'|translate}} ..."></div>
+                </li>
+            </ul>
+        </div>
+        <label ng-show="statisticTypes.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'statisticTypesNotFound'|translate}}</label>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+{
+  "name": "betfairparser",
+  "version": "0.0.1",
+  "main": "src/app.js",
+  "dependencies": {
+    "@types/bluebird": "^3.5.11",
+    "@types/lodash": "^4.14.74",
+    "@types/node-schedule": "0.0.36",
+    "@types/pg-promise": "0.0.28",
+    "@types/request": "0.0.45",
+    "@types/uuid": "^2.0.29",
+    "@types/xml2js": "^0.4.0",
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "node-schedule": "^1.2.5",
+    "pg-promise": "^5.6.4",
+    "request": "^2.81.0",
+    "strformat": "0.0.7",
+    "typescript": "^2.5.2",
+    "uri-js": "^3.0.2",
+    "uuid": "^3.0.1",
+    "xml2js": "^0.4.19"
+  }
+}

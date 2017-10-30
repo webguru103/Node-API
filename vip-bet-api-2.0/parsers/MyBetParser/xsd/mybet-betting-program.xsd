@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           xmlns:common="http://www.mybet.com/b2b/rest/jaxb/common"
+           xmlns:sport="http://www.mybet.com/b2b/rest/jaxb/program/sport"
+           xmlns:error="http://www.mybet.com/b2b/rest/jaxb/error"
+           xmlns="http://www.mybet.com/b2b/rest/jaxb/program"
+           targetNamespace="http://www.mybet.com/b2b/rest/jaxb/program">
+
+    <xs:import namespace="http://www.mybet.com/b2b/rest/jaxb/common" schemaLocation="mybet-common.xsd"/>
+    <xs:import namespace="http://www.mybet.com/b2b/rest/jaxb/program/sport"
+               schemaLocation="mybet-betting-program-sports.xsd"/>
+    <xs:import namespace="http://www.mybet.com/b2b/rest/jaxb/error" schemaLocation="mybet-error.xsd"/>
+
+    <xs:element name="betting-program">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error:error-response-type">
+                    <xs:sequence>
+                        <xs:element name="sport" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="program-structure">
+                                        <xs:attribute name="name" type="sports-enum"/>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="region" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="program-structure">
+                                        <xs:attribute name="name" type="regions-enum"/>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="bet-type" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:token"/>
+                                <xs:attribute name="sport-name" type="sports-enum"/>
+                                <xs:attribute name="translation-id" type="common:translation-id"/>
+                                <xs:attribute name="short-translation-id" type="common:translation-id">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            The short-translation-id attribute is not present if it is the same as the
+                                            translation-id attribute. If it is empty, the value of the translation-id
+                                            attribute should be used as the id of the short translation.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute name="description-translation-id" type="common:translation-id"/>
+                                <xs:attribute name="order-position" type="order-position"/>
+                                <xs:attribute name="sport-id" type="xs:long">
+                                    <xs:annotation>
+                                        <xs:documentation>bet-type related sport-id</xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="outcome-type" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:token"/>
+                                <xs:attribute name="short-translation-id" type="common:translation-id">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            The short-translation-id attribute is not present if it is the same as the
+                                            translation-id attribute. If it is empty, the value of the translation-id
+                                            attribute should be used as the id of the short translation.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute name="translation-id" type="common:translation-id"/>
+                            </xs:complexType>
+                        </xs:element>
+
+                        <xs:element name="period" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:token"/>
+                                <xs:attribute name="sport-name" type="sports-enum"/>
+                                <xs:attribute name="translation-id" type="common:translation-id"/>
+                                <xs:attribute name="short-translation-id" type="common:translation-id">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            The short-translation-id attribute is not present if it is the same as the
+                                            translation-id attribute. If it is empty, the value of the translation-id
+                                            attribute should be used as the id of the short translation.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+
+                        <xs:element name="event-group" type="event-group" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:attribute name="generation-date" use="required" type="xs:dateTime"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="event-group">
+        <xs:annotation>
+            <xs:documentation>It might be that a recurring event-group does not contain any events. That
+                is true for event groups which will contain (again) events in the future. Sometimes the
+                events for the next weekend in one of the minor soccer leagues are not already existent on
+                Monday morning. In contrast temporal event groups (tournaments like soccer world championship
+                2010 for example) will not be part of the program anymore and will be removed from the
+                program forever after the final match. Empty event groups should not be shown to the end
+                users.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="program-structure">
+                <xs:sequence>
+                    <xs:element name="combination-limit" type="combination-limit" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="event" type="event" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="outright" type="market" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="region-id" type="xs:long"/>
+                <xs:attribute name="sport-id" type="xs:long"/>
+                <xs:attribute name="type" type="xs:token" fixed="league"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="combination-limit">
+        <xs:attribute name="max-win" type="xs:double"/>
+        <xs:attribute name="max-stake" type="xs:double"/>
+        <xs:attribute name="min-odds" type="xs:decimal"/>
+        <xs:attribute name="min-bets" type="xs:int"/>
+        <xs:attribute name="max-bets" type="xs:int"/>
+        <xs:attribute name="night-block" type="xs:boolean"/>
+        <xs:attribute name="limit-factor" type="xs:double"/>
+        <xs:attribute name="nightly-limit-factor" type="xs:double"/>
+        <xs:attribute name="pool-limit" type="xs:double"/>
+        <xs:attribute name="pool-limit-factor" type="xs:double"/>
+        <xs:attribute name="max-live-stake" type="xs:double"/>
+        <xs:attribute name="max-live-net-win" type="xs:double"/>
+    </xs:complexType>
+
+    <xs:complexType name="event">
+        <xs:sequence>
+            <xs:element type="sport:sport-specific-details" name="sport-specific-details" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Extends the XML for different sports with polymorphism:
+                        http://www.ibm.com/developerworks/xml/library/ws-tip-xsdchoice/index.html
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="participant" type="common:participant" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="market" type="market" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="tv-channel-info" type="tv-channel-info" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="xs:long"/>
+        <xs:attribute name="betradar-id" type="xs:long"/>
+        <xs:attribute name="state" type="state-enum"/>
+        <xs:attribute name="shortcut" type="xs:token"/>
+        <xs:attribute name="will-become-live" use="required" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>An event is flagged as "live" if it will contain live markets. This
+                    flag does not indicate that it is live already.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="start-date" type="xs:dateTime"/>
+        <xs:attribute name="end-date" type="xs:dateTime"/>
+        <xs:attribute name="betradar-live-sports-center" type="xs:boolean"/>
+        <xs:attribute name="neutral-ground" type="xs:boolean"/>
+        <xs:attribute name="first-leg-score" type="xs:token"/>
+    </xs:complexType>
+
+    <xs:complexType name="tv-channel-info">
+        <xs:attribute name="tv-channel-id" type="xs:long" use="required"/>
+        <xs:attribute name="tv-channel-name" type="xs:token" use="required"/>
+        <xs:attribute name="start-date" type="xs:dateTime"/>
+    </xs:complexType>
+
+    <xs:complexType name="market">
+        <xs:sequence>
+            <xs:element name="bet-type" type="common:bet-type" minOccurs="0"/>
+            <xs:element maxOccurs="unbounded" name="outcome" type="outcome"/>
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="xs:long"/>
+        <xs:attribute name="shortcut" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>This is an optional attribute for outright markets. It shows the short cut from the
+                    corresponding event.
+                    Since an outright is the only market of an event it is displayed instead of the event as a direct
+                    child under a event group.
+                    Do *not* use it for "normal" markets.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="state" type="state-enum"/>
+        <xs:attribute name="translation-id" type="common:translation-id">
+            <xs:annotation>
+                <xs:documentation>Only special markets ("Which player will be substituted first" for
+                    example) and outrights have a translationId. A combination of event and bet type of the
+                    market should be used in all other cases (e.g. "Manchester vs. Madrid - 1X2")
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="most-balanced" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>Some bet types occur more than once for a single event. One Example:
+                    during live events after each goal new over/under markets will be created. The
+                    mostBalanced flag indicates, that this is the market of this bet type which should be shown
+                    on the most prominent place.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="live" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>An event is flagged as "live" if it contains or will contain live data (soccer
+                    specific details are
+                    available and live markets are present) in future. This does *not* mean that the event has
+                    necessarily already been started.
+                    As soon as the event contains live markets (markets with this "live"-flagged set true) it should be
+                    presented in the
+                    live section. This can be some time before the match actually starts: There might be e.g. a short
+                    period of time before
+                    where the SoccerPeriodEnum is still of type "not started" and there is a kick off live market
+                    already.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="start-date" type="xs:dateTime"/>
+        <xs:attribute name="end-date" type="xs:dateTime"/>
+        <xs:attribute name="short-translation-id" type="common:translation-id"/>
+        <xs:attribute name="description-translation-id" type="common:translation-id"/>
+        <xs:attribute name="expected-winners" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:complexType name="outcome">
+        <xs:simpleContent>
+            <xs:extension base="common:odds">
+                <xs:attribute name="id" use="required" type="xs:long"/>
+                <xs:attribute name="participant-type" type="common:participant-enum"/>
+                <xs:attribute name="outcome-type-name" type="xs:token"/>
+                <xs:attribute name="state" type="state-enum">
+                    <xs:annotation>
+                        <xs:documentation>The state is "paused" if this outcome is temporarily not open for
+                            betting. The odds in these cases are null or 1.0 and should not be shown to the
+                            customer. The button/link or whatever for this outcome should be displayed disabled.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="translation-id" type="common:translation-id"/>
+                <xs:attribute name="short-translation-id" type="common:translation-id"/>
+                <xs:attribute name="order-position" type="order-position"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:element name="betting-program-last-modified">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error:error-response-type">
+                    <xs:sequence>
+                        <xs:element name="entire-and-translations" type="xs:dateTime"/>
+                        <xs:element name="volatile" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="betting-program-translations">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="error:error-response-type">
+                    <xs:sequence>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="translation" type="translation">
+                            <xs:annotation>
+                                <xs:documentation>Generic translations for all entities in betting program which have
+                                    the attribute translationId, like team names, league names, etc.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="additional">
+                            <xs:annotation>
+                                <xs:documentation>Used for additional translations like soccer-period-enum. The type
+                                    attribute describes the exact type of the additional translation.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="translation">
+                                        <xs:attribute name="type" type="xs:token"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+
+                    </xs:sequence>
+                    <xs:attribute name="language" use="required" type="xs:token"/>
+                    <xs:attribute name="generation-date" type="xs:dateTime"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="state-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="open"/>
+            <xs:enumeration value="paused"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="program-structure">
+        <xs:attribute name="id" type="xs:long" use="required">
+            <xs:annotation>
+                <xs:documentation>The primary key of this entity.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="translation-id" type="common:translation-id"/>
+        <xs:attribute name="order-position" type="order-position"/>
+    </xs:complexType>
+
+    <xs:simpleType name="order-position">
+        <xs:restriction base="xs:int">
+            <xs:annotation>
+                <xs:documentation>The ascending order position of the entity. There might be gaps in the
+                    sequence.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="sports-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="none"/>
+            <xs:enumeration value="soccer"/>
+            <xs:enumeration value="tennis"/>
+            <xs:enumeration value="ice-hockey"/>
+            <xs:enumeration value="electronic-gaming"/>
+            <xs:enumeration value="chess"/>
+            <xs:enumeration value="american-football"/>
+            <xs:enumeration value="basketball"/>
+            <xs:enumeration value="golf"/>
+            <xs:enumeration value="celebrity"/>
+            <xs:enumeration value="finance"/>
+            <xs:enumeration value="politics"/>
+            <xs:enumeration value="alpine-skiing"/>
+            <xs:enumeration value="boxing"/>
+            <xs:enumeration value="snooker"/>
+            <xs:enumeration value="handball"/>
+            <xs:enumeration value="swimming"/>
+            <xs:enumeration value="ski-jumping"/>
+            <xs:enumeration value="biathlon"/>
+            <xs:enumeration value="darts"/>
+            <xs:enumeration value="formula-1"/>
+            <xs:enumeration value="baseball"/>
+            <xs:enumeration value="weather"/>
+            <xs:enumeration value="rugby-union"/>
+            <xs:enumeration value="freestyle-skiing"/>
+            <xs:enumeration value="volleyball"/>
+            <xs:enumeration value="cycling"/>
+            <xs:enumeration value="nordic-skiing"/>
+            <xs:enumeration value="xxx"/>
+            <xs:enumeration value="cricket"/>
+            <xs:enumeration value="field-hockey"/>
+            <xs:enumeration value="sailing"/>
+            <xs:enumeration value="rowing"/>
+            <xs:enumeration value="curling"/>
+            <xs:enumeration value="water-polo"/>
+            <xs:enumeration value="aussie-rules"/>
+            <xs:enumeration value="ping-pong"/>
+            <xs:enumeration value="bowls"/>
+            <xs:enumeration value="esl"/>
+            <xs:enumeration value="athletics"/>
+            <xs:enumeration value="futsal"/>
+            <xs:enumeration value="cross-country"/>
+            <xs:enumeration value="moto-gp"/>
+            <xs:enumeration value="beach-volleyball"/>
+            <xs:enumeration value="special-bets"/>
+            <xs:enumeration value="beach-soccer"/>
+            <xs:enumeration value="triathlon"/>
+            <xs:enumeration value="badminton"/>
+            <xs:enumeration value="softball"/>
+            <xs:enumeration value="rugby-league"/>
+            <xs:enumeration value="speedway"/>
+            <xs:enumeration value="netball"/>
+            <xs:enumeration value="martial-arts"/>
+            <xs:enumeration value="poker"/>
+            <xs:enumeration value="speed-skating"/>
+            <xs:enumeration value="motor-sports"/>
+            <xs:enumeration value="pool"/>
+            <xs:enumeration value="fantasy-league"/>
+            <xs:enumeration value="shooting"/>
+            <xs:enumeration value="archery"/>
+            <xs:enumeration value="judo"/>
+            <xs:enumeration value="taekwondo"/>
+            <xs:enumeration value="canoe-kayak"/>
+            <xs:enumeration value="trampoline"/>
+            <xs:enumeration value="rhythmic"/>
+            <xs:enumeration value="equitation"/>
+            <xs:enumeration value="fencing"/>
+            <xs:enumeration value="vault"/>
+            <xs:enumeration value="uneven-bars"/>
+            <xs:enumeration value="floor"/>
+            <xs:enumeration value="balance-beam"/>
+            <xs:enumeration value="diving"/>
+            <xs:enumeration value="wrestling"/>
+            <xs:enumeration value="bandy"/>
+            <xs:enumeration value="floorball"/>
+            <xs:enumeration value="pesapallo"/>
+            <xs:enumeration value="squash"/>
+            <xs:enumeration value="bobsleigh"/>
+            <xs:enumeration value="figure-skating"/>
+            <xs:enumeration value="luge"/>
+            <xs:enumeration value="nordic-combined"/>
+            <xs:enumeration value="short-track"/>
+            <xs:enumeration value="skeleton"/>
+            <xs:enumeration value="snowboarding"/>
+            <xs:enumeration value="ceremonies-medals"/>
+            <xs:enumeration value="lacrosse"/>
+            <xs:enumeration value="gaelic-sports"/>
+            <xs:enumeration value="fishing"/>
+            <xs:enumeration value="x-games"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="regions-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="germany"/>
+            <xs:enumeration value="italy"/>
+            <xs:enumeration value="france"/>
+            <xs:enumeration value="belgium"/>
+            <xs:enumeration value="spain"/>
+            <xs:enumeration value="netherlands"/>
+            <xs:enumeration value="greece"/>
+            <xs:enumeration value="great-britain"/>
+            <xs:enumeration value="international"/>
+            <xs:enumeration value="europe"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="bet-type-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="outright"/>
+            <xs:enumeration value="regular_1x2"/>
+            <xs:enumeration value="regular_1_2"/>
+            <xs:enumeration value="handicap_1x2"/>
+            <xs:enumeration value="handicap_1_2"/>
+            <xs:enumeration value="over_under"/>
+            <xs:enumeration value="double_chance"/>
+            <xs:enumeration value="halftime_fulltime"/>
+            <xs:enumeration value="first_halftime"/>
+            <xs:enumeration value="second_halftime"/>
+            <xs:enumeration value="final_score"/>
+            <xs:enumeration value="first_goal_time"/>
+            <xs:enumeration value="last_goal_time"/>
+            <xs:enumeration value="half_or_final"/>
+            <xs:enumeration value="first_goal_team"/>
+            <xs:enumeration value="last_goal_team"/>
+            <xs:enumeration value="goals_odd_even"/>
+            <xs:enumeration value="most_goals_halftime"/>
+            <xs:enumeration value="goal_both_teams"/>
+            <xs:enumeration value="head_to_head"/>
+            <xs:enumeration value="first_half_score"/>
+            <xs:enumeration value="both_halves_winner"/>
+            <xs:enumeration value="special"/>
+            <xs:enumeration value="kick_off"/>
+            <xs:enumeration value="winner_rest"/>
+            <xs:enumeration value="next_goal"/>
+            <xs:enumeration value="halftime_winner_rest"/>
+            <xs:enumeration value="halftime_over_under"/>
+
+            <xs:enumeration value="next_goal_overtime"/>
+            <xs:enumeration value="winner_rest_overtime"/>
+            <xs:enumeration value="next_goal_penalty"/>
+            <xs:enumeration value="winner_penalty"/>
+
+            <xs:enumeration value="total_goals"/>
+            <xs:enumeration value="exact_number_of_goals"/>
+            <xs:enumeration value="first_half_exact_number_of_goals"/>
+            <xs:enumeration value="first_half_goals_home"/>
+            <xs:enumeration value="first_half_goals_away"/>
+            <xs:enumeration value="when_will_next_goal_be_scored"/>
+            <xs:enumeration value="highest_scoring_half"/>
+            <xs:enumeration value="next_goal_first_half"/>
+
+            <xs:enumeration value="which_team_wins_race_to_x_points_first_set"/>
+            <xs:enumeration value="which_team_wins_race_to_x_points_second_set"/>
+            <xs:enumeration value="which_team_wins_race_to_x_points_third_set"/>
+            <xs:enumeration value="who_scores_xth_point_first_set"/>
+            <xs:enumeration value="who_scores_xth_point_second_set"/>
+            <xs:enumeration value="who_scores_xth_point_third_set"/>
+            <xs:enumeration value="how_many_sets_exceeded_score_limit"/>
+
+            <xs:enumeration value="over_under_for_first_set"/>
+            <xs:enumeration value="odd_even_for_first_set"/>
+            <xs:enumeration value="over_under_for_second_set"/>
+            <xs:enumeration value="odd_even_for_second_set"/>
+            <xs:enumeration value="over_under_for_third_set"/>
+            <xs:enumeration value="odd_even_for_third_set"/>
+
+            <xs:enumeration value="winner_of_match"/>
+            <xs:enumeration value="winner_of_set"/>
+            <xs:enumeration value="final_result_in_sets_best_of_3"/>
+            <xs:enumeration value="number_of_sets_best_of_3"/>
+
+            <xs:enumeration value="goal_team_1"/>
+            <xs:enumeration value="goal_team_2"/>
+            <xs:enumeration value="over_under_overtime"/>
+            <xs:enumeration value="winner_of_Games_XY_of_set"/>
+            <xs:enumeration value="final_result_best_of_5"/>
+
+            <xs:enumeration value="number_of_sets_best_of_5"/>
+            <xs:enumeration value="winner_of_period"/>
+            <xs:enumeration value="total_period_4"/>
+            <xs:enumeration value="total_period_overtime"/>
+            <xs:enumeration value="odd_even_period_4"/>
+
+            <xs:enumeration value="odd_even_period_halftime"/>
+            <xs:enumeration value="draw_no_period_1"/>
+            <xs:enumeration value="draw_no_period_2"/>
+            <xs:enumeration value="draw_no_period_3"/>
+            <xs:enumeration value="draw_no_period_4"/>
+
+            <xs:enumeration value="draw_no_period_halftime"/>
+            <xs:enumeration value="winner_with_overtime"/>
+            <xs:enumeration value="winner_jump_ball"/>
+            <xs:enumeration value="overtime"/>
+            <xs:enumeration value="who_scores_x_points"/>
+
+            <xs:enumeration value="winner_with_x_points"/>
+            <xs:enumeration value="winner_of_first_set_best_of_3"/>
+            <xs:enumeration value="winner_of_first_set_best_of_5"/>
+            <xs:enumeration value="goal_team_home"/>
+            <xs:enumeration value="goal_team_away"/>
+
+            <xs:enumeration value="which_team_wins_race_to_x_points_fourth_set"/>
+            <xs:enumeration value="which_team_wins_race_to_x_points_fifth_set"/>
+            <xs:enumeration value="who_scores_xth_point_fourth_set"/>
+            <xs:enumeration value="who_scores_xth_point_fifth_set"/>
+            <xs:enumeration value="over_under_for_fifth_period"/>
+            <xs:enumeration value="odd_even_for_fifth_period"/>
+
+            <xs:enumeration value="first_half_overtime"/>
+            <xs:enumeration value="overtime_1x2"/>
+
+            <xs:enumeration value="regular_1x2_over_under"/>
+
+            <xs:enumeration value="goal_both_teams_1st_half"/>
+            <xs:enumeration value="goal_both_teams_2nd_half"/>
+
+            <xs:enumeration value="regular_1x2_goal_both_teams"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="translation">
+        <xs:simpleContent>
+            <xs:extension base="xs:token">
+                <xs:attribute name="id" use="required" type="common:translation-id"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+</xs:schema>

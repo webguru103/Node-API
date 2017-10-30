@@ -1,0 +1,272 @@
+{
+    "Databases": {
+		"Api": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-api",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Category": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-category",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Common": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-common",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "EventMarket": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-event-market",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Event": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-event",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Mapping": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-mapping",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Market": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-market",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Participant": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-participant",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Warnings": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-warnings",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Security": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-security",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "Betslip": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-betslip",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+		"Result": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-result",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedLadbrokes": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-ladbrokes",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedMyBet": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-mybet",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedRedKings": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-redkings",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedSBTech": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-sbtech",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedWilliamHills": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-whills",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedBetFair": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-betfair",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedBetWay": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-betway",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedCoral": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-coral",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+		},
+        "FeedPinnacle": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-pinnacle",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedBet365": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-bet365",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedBWin": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-bwin",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+        "FeedSports888": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-sports888",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+		"FeedBetAtHome": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-bet-at-home",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        },
+		"FeedIntertops": {
+            "postgres": {
+                "user": "postgres",
+                "password": "qwerty1",
+                "database": "vb-feed-intertops",
+                "port": 5432,
+                "host": "localhost",
+                "ssl": false
+            }
+        }
+		
+    },
+    "RabbitMQ": {
+        "host": "localhost",
+        "port": 5672,
+        "username": "vbadmin",
+        "password": "g0s5a",
+        "vhost": "/vb"
+    }
+}

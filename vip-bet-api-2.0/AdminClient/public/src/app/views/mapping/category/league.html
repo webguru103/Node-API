@@ -1,0 +1,132 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'leagueMapping'|translate}}</h1>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="panel panel-default" style="margin-bottom:5px">
+            <div class="panel-body">
+                <form role="form">
+                    <div class="col-lg-2 no-padding-left">
+                        <label>{{'sport'|translate}}</label>
+                        <ui-select ng-init="filter.sport=sports[0];" ng-model="filter.sport" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in sports | filter: $select.search">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <!-- <label class="i-checks" style="margin-top: 15px;">
+                            <input type="checkbox" ng-model="filter.unmapped"><i></i>{{'showUnmapped'|translate}}
+                        </label> -->
+                    </div>
+                    <div class="col-lg-2 no-padding-left">
+                        <label>{{'provider'|translate}}</label>
+                        <ui-select ng-init="filter.provider=providers[0]; findLeagues();" ng-model="filter.provider" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name | translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in providers | filter: $select.search">
+                                <span ng-bind-html="item.name | translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-lg-3 no-padding-right no-padding-left" ng-show="permissions.includes('mapping_show_all')||permissions.includes('super_admin')">
+                        <label>{{'status'|translate}}</label>
+                        <div style="width: 100%; float: left;">
+                            <div class="radio margin-top-10 margin-right-10" style="float:left">
+                                <label class="i-checks">
+                                <input type="radio" name="a" ng-model="filter.status" value=""><i></i>
+                                {{'all'|translate}}
+                            </label>
+                            </div>
+                            <div class="radio margin-top-10 margin-right-10" style="float:left">
+                                <label class="i-checks">
+                                <input type="radio" name="a" ng-model="filter.status" value="{{categoryStatus.ACTIVE}}"><i></i>
+                                {{'active'|translate}}
+                            </label>
+                            </div>
+                            <div class="radio margin-top-10" style="float:left">
+                                <label class="i-checks">
+                                <input type="radio" name="a" ng-model="filter.status" value="{{categoryStatus.HIDE}}"><i></i>
+                                {{'hidden'|translate}}
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 no-padding-right no-padding-left">
+                        <label>{{'mapping'|translate}}</label>
+                        <div style="width: 100%; float: left;">
+                            <div class="radio margin-top-10 margin-right-10" style="float:left">
+                                <label class="i-checks">
+                                    <input type="radio" name="b" ng-model="filter.mapped" value=""><i></i>{{'all'|translate}}
+                                </label>
+                            </div>
+                            <div class="radio margin-top-10 margin-right-10" style="float:left">
+                                <label class="i-checks">
+                                    <input type="radio" name="b" ng-model="filter.mapped" value="true"><i></i>{{'mapped'|translate}}
+                                </label>
+                            </div>
+                            <div class="radio margin-top-10" style="float:left">
+                                <label class="i-checks">
+                                    <input type="radio" name="b" ng-model="filter.mapped" value="false"><i></i>{{'unmapped'|translate}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-sm btn-primary margin-left-5" style="margin-top:27px" ng-click="findLeagues()">
+                            <i class="fa fa-search"></i> {{'search'|translate}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+            <img src="/src/img/ring.svg" />
+        </div>
+        <div class="panel panel-default" ng-show="leagues.length>0" style="overflow-y: auto; height: calc(100vh - 327px); margin-bottom:5px">
+            <table class="table table-striped m-b-none">
+                <thead>
+                    <tr>
+                        <th style="width:40px" ng-show="permissions.includes('mapping_hide')||permissions.includes('super_admin')">
+                            <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="showHideProviderAllLeagues()">
+                                <i class="fa" ng-class="{'fa-eye':allCategoriesStatus()==categoryStatus.ACTIVE, 'fa-eye-slash':allCategoriesStatus()==categoryStatus.HIDE}"></i>
+                            </button>
+                        </th>
+                        <th style="width:50%">{{'name'|translate}}</th>
+                        <th style="width:50%">{{'systemLeague'|translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="league in leagues" class="table-row-md text-sm">
+                        <td ng-show="permissions.includes('mapping_hide')||permissions.includes('super_admin')">
+                            <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="showHideProviderLeague(league)">
+                                <i class="fa" ng-class="{'fa-eye':league.provider_category_status_id==categoryStatus.ACTIVE, 'fa-eye-slash':league.provider_category_status_id==categoryStatus.HIDE}"></i>
+                            </button>
+                        </td>
+                        <td style="vertical-align:middle">{{league.name}}</td>
+                        <td>
+                            <button class="btn btn-rounded btn-sm btn-icon btn-default margin-right-5" style="float: left;" ng-click="unmap(league)"><i class="fa fa-trash-o"></i>
+                            </button>
+                            <ui-select ng-model="league.systemLeague" on-select="map(league)" theme="bootstrap" style="float: left; max-width: calc(100% - 35px); width: calc(100% - 35px);">
+                                <ui-select-match placeholder="Select ...">
+                                    {{$select.selected.name | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in league.searchResult | filter: $select.search" refresh="searchLeague($select, league, filter.sport.id)"
+                                    refresh-delay="500">
+                                    <span ng-bind-html="item.name | translate | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center" ng-show="leagues.length>0">
+            <pagination direction-links="false" total-items="filter.totalItems" items-per-page="filter.perPage" ng-model="filter.currentPage"
+                num-pages="filter.maxPages" ng-change="onPageChange()" class="m-t-none m-b pagination-2 "></pagination>
+        </div>
+        <label ng-show="leagues.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'leaguesNotFound'|translate}}</label>
+    </div>
+</div>

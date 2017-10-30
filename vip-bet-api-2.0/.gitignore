@@ -1,0 +1,46 @@
+daemon/
+*.map
+**.map
+**/src/*.map
+**/src/**.map
+**/src/**.js
+**/src/routes/*.js
+**/src/components/**/*.js
+**/src/messaging/**/*.js
+**/src/enums/**/*.js
+**/src/base/**/*.js
+**/src/domain/**/*.js
+**/src/bll/**/*.js
+**/src/dal/**/*.js
+**/src/utils/**/*.js
+**/src/providers/**/*.js
+**/src/parsers/**/*.js
+**/src/app.js
+**/BaseParser/**/*.js
+**/src/middleware/**/*.js
+**/src/decorators/**/*.js
+typings/
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+AdminClient/public/uploads/*.*
+**/package-lock.json
+db_bak.zip
+API.test/tests/**/*.js
+db_bak

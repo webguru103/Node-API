@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{message|translate}}</h3>
+</div>
+<div class="modal-body" ng-show="selectedCategory.original.type_id==categoryType.league">
+    <div>
+        <label class="col-sm-10 control-label" style="width:inherit">{{'mergeWith'|translate}}</label>
+        <div>
+            <label class="i-checks">
+            <input type="checkbox" ng-model="moveToLeague" checked=""><i></i>
+        </label>
+        </div>
+    </div>
+    <ui-select ng-show="moveToLeague" ng-model="selectedCategory.moveToLeague" theme="bootstrap" style="float: left;" class="col-sm-12">
+        <ui-select-match placeholder="Select ...">
+            {{$select.selected.name | translate}}
+        </ui-select-match>
+        <ui-select-choices repeat="item in searchResult | filter: $select.search" refresh="searchLeague($select, league, filter.sport.id)"
+            refresh-delay="500">
+            <span ng-bind-html="item.name | translate | highlight: $select.search"></span>
+        </ui-select-choices>
+    </ui-select>
+    <div style="clear:both"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">{{no|translate}}</button>
+    <button class="btn btn-primary" ng-disabled="invalidForm()" ng-click="ok()">{{yes|translate}}</button>
+</div>

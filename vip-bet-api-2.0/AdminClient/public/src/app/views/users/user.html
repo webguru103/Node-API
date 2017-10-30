@@ -1,0 +1,18 @@
+<button class="btn m-b-xs btn-sm btn-default btn-rounded ng-scope" ui-sref="app.users" style="position: absolute; margin-left: 15px; margin-top: 15px;">
+    <i class="fa fa-search"></i> {{'back'|translate}}
+</button>
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3 text-center">{{'users.details'|translate}}</h1>
+</div>
+
+<div class="wrapper-md padding-top-5">
+    <div class="row">
+        <form name="myForm" class="form-horizontal">
+            <tabset class="tab-container">
+                <tab ng-repeat="tab in tabs" heading="{{tab.title|translate}}" active="tab.active" disabled="tab.disabled">
+                    <div ng-include src="tab.content"></div>
+                </tab>
+            </tabset>
+        </form>
+    </div>
+</div>

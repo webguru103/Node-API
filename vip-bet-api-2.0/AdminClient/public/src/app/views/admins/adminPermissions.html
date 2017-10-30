@@ -1,0 +1,5 @@
+<div ng-repeat="permission in permissions" class="checkbox">
+    <label class="i-checks">
+        <input type="checkbox" ng-change='onPermissionChange(permission, checked)' ng-model="checked" ng-init="checked = user.user_roles.includes(permission)" ><i></i> {{permission}}
+    </label>
+</div>

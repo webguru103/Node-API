@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="app">
+<head>
+  <meta charset="utf-8" />
+  <title>Vip-Bet Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="libs/assets/animate.css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="libs/assets/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="libs/assets/simple-line-icons/css/simple-line-icons.css" type="text/css" />
+  <link rel="stylesheet" href="libs/jquery/bootstrap/dist/css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="libs/jstree/themes/default/style.min.css">
+  <link rel="stylesheet" href="libs/angular/angular-toastr/angular-toastr.css">
+  <link rel="stylesheet" href="libs/bootstrap/daterangepicker.css">
+  <link rel="stylesheet" href="src/css/appstyle.css">
+  <!-- build:css css/app.min.css -->
+  <link rel="stylesheet" href="src/css/font.css" type="text/css" />
+  <link rel="stylesheet" href="src/css/app.css" type="text/css" />
+  <!-- endbuild -->
+</head>
+<body ng-controller="AppCtrl">
+  <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
+
+<!-- build:js js/app.angular.js -->
+  <!-- jQuery -->
+  <script src="libs/jquery/jquery/dist/jquery.js"></script>
+  <!-- Bootstrap -->
+  <script src="libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
+
+  <!-- Angular -->
+  <script src="libs/angular/angular/angular.js"></script>
+
+  <script src="libs/angular/angular-animate/angular-animate.js"></script>
+  <script src="libs/angular/angular-aria/angular-aria.js"></script>
+  <script src="libs/angular/angular-cookies/angular-cookies.js"></script>
+  <script src="libs/angular/angular-messages/angular-messages.js"></script>
+  <script src="libs/angular/angular-resource/angular-resource.js"></script>
+  <script src="libs/angular/angular-sanitize/angular-sanitize.js"></script>
+  <script src="libs/angular/angular-touch/angular-touch.js"></script>
+  <script src="libs/angular/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js"></script>
+<!---->
+  <script type="text/javascript" src="libs/ga.js"></script>
+  <script type="text/javascript" src="libs/lodash.js"></script>
+  <script type="text/javascript" src="libs/d3.js" charset="utf-8"></script>
+
+  <script type="text/javascript" src="libs/modular/ct-ui-router-extras.core.js"></script>
+  <script type="text/javascript" src="libs/modular/ct-ui-router-extras.dsr.js"></script>
+  <!---->
+
+  <script src="libs/angular/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="libs/angular/ngstorage/ngStorage.js"></script>
+  <script src="libs/angular/angular-ui-utils/ui-utils.js"></script>
+
+  <!-- bootstrap -->
+  <script src="libs/angular/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- lazyload -->
+  <script src="libs/angular/oclazyload/dist/ocLazyLoad.js"></script>
+  <!-- translate -->
+  <script src="libs/angular/angular-translate/angular-translate.js"></script>
+  <script src="libs/angular/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="libs/angular/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
+  <script src="libs/angular/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+
+  <!-- App -->
+  <script src="src/app/app.js"></script>
+  <script src="src/app/config.js"></script>
+  <script src="src/app/config.lazyload.js"></script>
+  <script src="src/app/config.router.js"></script>
+  <script src="src/app/main.js"></script>
+  <script src="src/js/services/ui-load.js"></script>
+  <script src="src/js/filters/fromNow.js"></script>
+  <script src="src/js/directives/setnganimate.js"></script>
+  <script src="src/js/directives/ui-butterbar.js"></script>
+  <script src="src/js/directives/ui-focus.js"></script>
+  <script src="src/js/directives/ui-fullscreen.js"></script>
+  <script src="src/js/directives/ui-jq.js"></script>
+  <script src="src/js/directives/ui-module.js"></script>
+  <script src="src/js/directives/ui-nav.js"></script>
+  <script src="src/js/directives/ui-scroll.js"></script>
+  <script src="src/js/directives/ui-shift.js"></script>
+  <script src="src/js/directives/ui-toggleclass.js"></script>
+  <script src="libs/moment.js"></script>
+  <!--<script src="libs/angular/angular-moment/angular-moment.js"></script>-->
+  <script src="src/js/controllers/bootstrap.js"></script>
+  <script src="libs/bootstrap/daterangepicker.js"></script>
+  <script src="libs/angular/angular-daterangepicker/js/angular-daterangepicker.js"></script>
+  <!--<script src="libs/socket.io/socket.io.js"></script>-->
+  <!--<script src="libs/angular/angular-socket-io/socket.js"></script>-->
+
+  <script src="libs/jstree/jstree.js"></script>
+  <script src="libs/angular/angular-js-tree/ngJsTree.js"></script>
+  <script src="libs/angular/angular-toastr/angular-toastr.tpls.js"></script>
+
+  <!--directives-->
+  <script src="src/app/directives/categoryTree/categoryTree.js"></script>
+  <script src="src/app/constants/categoryType.js"></script>
+  <script src="src/app/constants/events.js"></script>
+  <!-- services -->
+  <script src="src/app/services/apiService.js"></script>
+  <script src="src/app/services/users/userService.js"></script>
+  <script src="src/app/services/participants/participantsService.js"></script>
+  <script src="src/app/services/category/categoryService.js"></script>
+  <script src="src/app/services/common/commonService.js"></script>
+  <script src="src/app/services/markets/marketService.js"></script>
+  <script src="src/app/services/events/eventService.js"></script>
+  <script src="src/app/services/events/eventMarketService.js"></script>
+  <script src="src/app/services/warnings/warningService.js"></script>
+  <script src="src/app/services/mapping/mappingService.js"></script>
+  <script src="src/app/services/mediaService.js"></script>
+  <script src="src/app/services/settings/settingsService.js"></script>
+  <script src="src/app/services/result/resultService.js"></script>
+  <script src="src/app/services/betslips/betslipsService.js"></script>
+  <script src="src/app/services/betslips/betslipDetailService.js"></script>
+<!-- endbuild -->
+  <!-- Lazy loading -->
+</body>
+</html>

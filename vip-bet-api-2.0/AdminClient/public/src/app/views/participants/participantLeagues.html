@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{message|translate}}</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{'leagues'|translate}}
+                <button class="pull-right btn btn-rounded btn-sm btn-icon btn-default margin-top--5" ng-click="addLeague()"><i
+                        class="fa fa-plus"></i></button>
+            </div>
+            <table class="table table-striped m-b-none">
+                <thead>
+                    <tr>
+                        <th>{{'country'|translate}}</th>
+                        <th>{{'league'|translate}}</th>
+                        <th style="width: 1px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in participantLeagues">
+                        <td style="width: 45%">
+                            <ui-select ng-model="row.country" on-select="onCountryChange($item,row)" theme="bootstrap">
+                                <ui-select-match placeholder="{{'select'|translate}}...">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in countries | filter: $select.search">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </td>
+                        <td style="width: 45%">
+                            <ui-select ng-model="row.league" theme="bootstrap">
+                                <ui-select-match placeholder="{{'select'|translate}}...">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in row.leagues | filter: $select.search">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </td>
+                        <td>
+                            <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="deleteLeague(row)"><i class="fa fa-trash-o"></i>
+                        </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">{{no|translate}}</button>
+    <button class="btn btn-primary" ng-disabled="myForm.$invalid" ng-click="ok()">{{yes|translate}}</button>
+</div>

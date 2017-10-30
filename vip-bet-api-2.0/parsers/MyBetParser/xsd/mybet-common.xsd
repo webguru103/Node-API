@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           xmlns="http://www.mybet.com/b2b/rest/jaxb/common"
+           targetNamespace="http://www.mybet.com/b2b/rest/jaxb/common">
+
+    <xs:complexType name="bet-type">
+        <xs:sequence>
+            <xs:element name="odds-value" type="xs:token" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Some bet types need further specification like handicap or over under. For
+                        handicap markets the odds value contains 1:0 or 0:2 etc, for over/under markets 0.5, 1.5, 2.5
+                        etc. There might be more than one handicap and more than one over/under market per event. For
+                        one of these markets of each bet type the mostBalanced flag is set to true. It is recommend to
+                        display these flagged markets in a more prominent way than the others of the same bet type.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>The values are of type bet-type-enum. Because mybet will add more bet types in the
+                    future the enum is not referenced here.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="translation" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>bet-type translation: long version</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="short-translation" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>bet-type translation: short version</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="description-translation" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>translated bet-type description</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="participant">
+        <xs:annotation>
+            <xs:documentation>In the betting program the translation of a participant can be determined by
+                translationId. For other parts of the API (like place bet) the translation is provided as the content of
+                this element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:token">
+                <xs:attribute name="type" use="required" type="xs:token">
+                    <xs:annotation>
+                        <xs:documentation>Contains a participant-enum. More participant type enums might be added for
+                            new sports in the future. For soccer only home and away team are supported.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="translation-id" type="translation-id"/>
+                <xs:attribute name="short-translation-id" type="translation-id"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="odds">
+        <xs:restriction base="xs:decimal">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    Odds presented to the end user are rounded to a fraction of 0.05
+                    and formatted to match the pattern (\d{3,4})|(\d{2}.\d)|([1-9].\d{2}),
+                    like the following sample code is doing:
+
+                    // returns odds rounded to a fraction of 0.05 and formated to match mybet odds pattern: (\d{3,4})|(\d{2}.\d)|([1-9].\d{2})
+                    private static String getRoundedAndFormattedOdds(final double oddsValue) {
+                        final double roundedOddsValue = (Math.round(oddsValue * 100d) + 4) / 5 * 5 / 100d;
+                        return getFormattedOdds(roundedOddsValue);
+                    }
+
+                    // returns odds formated to match mybet odds pattern: (\d{3,4})|(\d{2}.\d)|([1-9].\d{2})
+                    private static String getFormattedOdds(final double oddsValue) {
+                        final int fractionDigits;
+                        if (oddsValue >= 100d) {
+                            fractionDigits = 0; // odds pattern "\d{3,4}"
+                        } else if (oddsValue >= 10d) {
+                            fractionDigits = 1; // odds pattern "\d{2}.\d"
+                        } else {
+                            fractionDigits = 2; // odds pattern "[1-9].\d{2}"
+                        }
+
+                        final NumberFormat decimalFormat = NumberFormat.getInstance(Locale.ENGLISH);
+                        decimalFormat.setMinimumIntegerDigits(1);
+                        decimalFormat.setGroupingUsed(false);
+                        decimalFormat.setMinimumFractionDigits(fractionDigits);
+                        decimalFormat.setMaximumFractionDigits(fractionDigits);
+
+                        return decimalFormat.format(oddsValue);
+                    }
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="surcharge">
+        <xs:restriction base="xs:decimal">
+            <xs:annotation>
+                <xs:documentation>Surcharge (toll, tax, or bonus) amount paid or granted on a stake or profit.
+                    Surcharges have the same currency as the bet slip they belong to.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="participant-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="home"/>
+            <xs:enumeration value="away"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="account-balance">
+        <xs:sequence>
+            <xs:element name="account" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:decimal">
+                            <xs:annotation>
+                                <xs:documentation>Account balance value is specified in units of the currency.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:attribute name="type" use="required" type="account-type-enum"/>
+                            <xs:attribute name="currency" use="required" type="xs:token">
+                                <xs:annotation>
+                                    <xs:documentation>3-letter ISO 4217 currency code. Currently we support only EUR for
+                                        sports bets and USD for poker.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="account-type-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="sports-bets"/>
+            <xs:enumeration value="casino"/>
+            <xs:enumeration value="poker"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="password-validation-type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="sms-sent "/>
+            <xs:enumeration value="casino"/>
+            <xs:enumeration value="poker"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="translation-id">
+        <xs:restriction base="xs:token">
+            <xs:annotation>
+                <xs:documentation>For outrights and special bet types every outcome has a dedicated translation. All
+                    others bet types have a type (the translation-id can be obtained by the outcome-type element) and
+                    some (like 1x2) might have also a participant-type: The translation of the team can be obtained via
+                    the participant and the translation of the outcome (like "home", "away" or "draw") can be obtained
+                    by the outcome-type.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="translated-message">
+        <xs:annotation>
+            <xs:documentation>Translated message.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:token">
+                <xs:attribute name="language" use="required" type="xs:token"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="sort-order-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ascending"/>
+            <xs:enumeration value="descending"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="http-url">
+        <xs:restriction base="xs:anyURI">
+            <xs:annotation>
+                <xs:documentation>accepts only http:// or https:// URIs</xs:documentation>
+            </xs:annotation>
+            <xs:pattern value="https?://.+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="http-method-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="post"/>
+            <xs:enumeration value="get"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="money">
+        <xs:annotation>
+            <xs:documentation>Money amount with currency.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="amount" type="xs:decimal" use="required"/>
+        <xs:attribute name="currency-code" type="xs:token" use="required">
+            <xs:annotation>
+                <xs:documentation>3-letter ISO 4217 currency code.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="pixel-url">
+        <xs:attribute name="url" type="xs:token"/>
+        <xs:attribute name="is-html" type="xs:boolean" />
+    </xs:complexType>
+
+
+    <xs:simpleType name="user-domain">
+        <xs:restriction base="xs:token">
+            <xs:annotation>
+                <xs:documentation>The domain which user belongs to. Possible values for user domain are defined in user-domain-enum:
+                    "online-regular",
+                    "cashcard-user",
+                    "cashcard-agent",
+                    "loyalty-card".
+                </xs:documentation>
+            </xs:annotation>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="user-domain-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="online-regular"/>
+            <xs:enumeration value="cashcard-user"/>
+            <xs:enumeration value="cashcard-agent"/>
+            <xs:enumeration value="loyalty-card"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="password-validation-type-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="sms-sent"/>
+            <xs:enumeration value="email-sent"/>
+            <xs:enumeration value="authentication-code"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="device">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="desktop"/>
+            <xs:enumeration value="smartphone"/>
+            <xs:enumeration value="tablet"/>
+            <xs:enumeration value="smartphone_native"/>
+            <xs:enumeration value="tablet_native"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

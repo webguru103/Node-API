@@ -1,0 +1,82 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.settings.resultRules'|translate}}</h1>
+</div>
+<div class="wrapper-md padding-top-5">
+    <div class="row">
+        <div class="panel panel-default margin-bottom-5">
+            <div class="panel-body no-padding-bottom">
+                <form role="form">
+                    <div class="col-lg-3 no-padding-left no-padding-right">
+                        <label>{{'sport'|translate}}</label>
+                        <ui-select ng-init="filter.sport=sports[0]; search();" ng-model="filter.sport" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in sports | filter: $select.search">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <label>{{'name'|translate}}</label>
+                        <input type="text" class="form-control" ng-model="filter.name" placeholder="{{'name'|translate}} ...">
+                    </div>
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <button class="btn btn-sm btn-primary" style="margin-top: 25px; margin-left: 10px;" ng-click="search()">
+                            <i class="fa fa-search"></i> {{'search'|translate}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-4 no-padding-left padding-right-5">
+            <div style="position: absolute; left: 50%; top: 50%;" ng-show="marketsLoading">
+                <img src="/src/img/ring.svg" />
+            </div>
+            <div class="panel panel-default" style="overflow-y: auto; height: calc(100vh - 280px); margin-bottom: 5px">
+                <table class="table table-striped m-b-none">
+                    <thead>
+                        <tr>
+                            <th>{{'marketName'|translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="market in markets" class="table-row-md text-sm" ng-class="{'row-selected':market.selected}" ng-click="loadSelectionsRules(market)">
+                            <td>{{market.name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <label ng-show="markets.length==0&&!marketsLoading" class="text-muted loading-text-center">{{'noMarketsNotFound'|translate}}</label>
+        </div>
+        <div class="col-lg-8 padding-left-5 no-padding-right">
+            <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+                <img src="/src/img/ring.svg" />
+            </div>
+            <div class="panel panel-default" style="height: calc(100vh - 280px); margin-bottom: 5px">
+                <div style="overflow-y: auto; height: calc(100vh - 330px);">
+                    <table class="table table-striped m-b-none">
+                        <thead>
+                            <tr>
+                                <th style="width:30%">{{'name'|translate}}</th>
+                                <th>{{'rule'|translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="selection in market.selections" class="table-row-md text-sm">
+                                <td style="vertical-align:middle">{{selection.name}}</td>
+                                <td>
+                                    <input type="text" class="form-control" ng-model="selection.rule" placeholder="{{'rule'|translate}} ...">
+                                    <!-- <input style="margin-bottom: 5px" type="text" class="form-control" ng-model="selection.rule" placeholder="{{'rule'|translate}} ..."> -->
+                                    <!-- <input type="text" class="form-control" ng-model="selection.cancel_rule" placeholder="{{'cancelRule'|translate}} ..."> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button ng-show="market.selections.length>0" class="btn btn-sm btn-success margin-top-10 pull-right margin-right-10" ng-click="updateRules(market.selections)">{{'update'|translate}}</button>
+            </div>
+            <label ng-show="market.selections.length==0&&!loading" class="text-muted loading-text-center">{{'scopesNotFound'|translate}}</label>
+        </div>
+    </div>
+</div>

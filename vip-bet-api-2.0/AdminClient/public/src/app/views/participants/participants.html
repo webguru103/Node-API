@@ -1,0 +1,65 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.participants'|translate}}</h1>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="col-lg-3 no-padding-left padding-right-5">
+            <div class="panel panel-default" style="height: calc(100vh - 200px); overflow-y: auto;">
+                <category-tree categories="categories" level="1" on-select-node="onSelectNode(node)"></category-tree>
+
+            </div>
+        </div>
+        <div class="col-lg-9 no-padding-right padding-left-5">
+            <div class="panel panel-default" style="height: calc(100vh - 200px);">
+                <div class="panel-body full-width">
+                    <div>
+                        <button style="float:left" class="btn m-b-xs btn-default margin-right-5" ng-click="addParticipant()" ng-show="selectedCategory">
+                            <i class="fa fa-plus"></i> {{'add'|translate}}
+                        </button>
+                        <div ng-show="selectedCategory" class="margin-right-5" style="float:left; width:150px">
+                            <ui-select ng-model="provider" ng-change="onProviderChange()" theme="bootstrap">
+                                <ui-select-match placeholder="{{'notMappedWith'|translate}}">
+                                    {{$select.selected.name | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in providers | filter: $select.search">
+                                    <span ng-bind-html="item.name | translate | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <button class="btn m-b-xs btn-default margin-right-5" style="float:left" ng-click="updateParticipant()" ng-show="selectedParticipant">
+                            <i class="fa fa-edit"></i> {{'edit'|translate}}
+                        </button>
+                        <button class="btn m-b-xs btn-default margin-right-5" style="float:left" ng-click="mapParticipant()" ng-show="selectedParticipant">
+                            <i class="fa fa-random"></i> {{'mapping'|translate}}
+                        </button>
+                        <button class="btn m-b-xs btn-default margin-right-5" style="float:left" ng-click="updateParticipantLeagues()" ng-show="selectedParticipant">
+                            <i class="fa fa-bars"></i> {{'leagues'|translate}}
+                        </button>
+                        <button class="btn m-b-xs btn-default margin-right-5" style="float:left" ng-click="deleteParticipant()" ng-show="selectedParticipant">
+                            <i class="fa fa-trash-o"></i> {{'delete'|translate}}
+                        </button>
+                    </div>
+                    <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+                        <img src="/src/img/ring.svg" />
+                    </div>
+                    <div style="height: calc(100vh - 252px); overflow-y: auto" class="full-width">
+                        <table class="table table-striped m-b-none" ng-show="!loading">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="participant in participants" ng-class="{'row-selected':participant.selected}" ng-click="selectParticipant(participant)"
+                                    ng-dblclick="updateParticipant(participant)">
+                                    <td>{{participant.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <label ng-show="participants.length==0&&!loading" class="text-center text-muted full-width box-center">{{'noParticipantsInSport'|translate}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

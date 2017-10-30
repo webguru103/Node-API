@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{message|translate}}</h3>
+</div>
+
+<div class="modal-body">
+    <form name="myForm" class="bs-example form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-2 control-label">{{'name'|translate}}</label>
+            <div class="col-lg-10">
+                <input type="text" ng-model="category.name" required class="form-control" placeholder="{{'name'|translate}}">
+            </div>
+        </div>
+        <div class="form-group" ng-show=showIcon()>
+            <label class="col-lg-2 control-label">{{'icon'|translate}}</label>
+            <img ng-hide="category.isImage" ng-src="{{category.icon_url||'./uploads/default-logo.png'}}" style="float: left; width: 45px; margin-left: 15px;"
+                type="file" ngf-select ng-model="icon.file" ngf-change="onImageChange($files, category)" name="file" ngf-pattern="'image/*'"
+                accept="image/*" ngf-max-size="20MB" />
+            <img ng-show="category.isImage" ngf-src="icon.file" class="thumb" style="float: left; width: 45px; margin-left: 15px;" type="file"
+                ngf-select ng-model="icon.file" ngf-change="onImageChange($files, category)" name="file" ngf-pattern="'image/*'"
+                accept="image/*" ngf-max-size="20MB">
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">{{no|translate}}</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">{{yes|translate}}</button>
+</div>

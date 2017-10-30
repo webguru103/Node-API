@@ -1,0 +1,71 @@
+<div class="bg-light lter b-b wrapper-md" style="height:67px">
+    <h1 class="m-n font-thin h3" style="float:left">{{'marketTemplates'|translate}}</h1>
+    <button ng-show="permissions.includes('market_add')||permissions.includes('super_admin')" class="btn btn-sm btn-success pull-left btn-rounded btn-icon"
+        style="float: left !important; margin-left: 15px;" ng-click="addMarketTemplate()"><i class="fa fa-plus"></i></button>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form role="form">
+                    <div class="col-lg-3 no-padding-left no-padding-right">
+                        <label>{{'sport'|translate}}</label>
+                        <ui-select ng-init="filter.sport=sports[0]; searchMarkets();" ng-model="filter.sport" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in sports | filter: $select.search">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <label>{{'marketName'|translate}}</label>
+                        <input type="text" class="form-control" ng-model="filter.name" placeholder="{{'marketName'|translate}} ...">
+                    </div>
+                    <!-- <div class="form-group col-lg-3 no-padding-right">
+                        <label>{{'mappedWith'|translate}}</label>
+                        <ui-select ng-init="provider=providers[0]" ng-model="provider" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name | translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in providers | filter: $select.search">
+                                <span ng-bind-html="item.name | translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div> -->
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <label ng-show="permissions.includes('market_show_all')||permissions.includes('super_admin')" class="i-checks" style="margin-top: 31px; float: left; margin-right: 5px;">
+                            <input type="checkbox" ng-model="filter.showActive"><i></i>{{'showActive'|translate}}
+                        </label>
+                        <button class="btn btn-sm btn-primary" style="margin-top: 25px; margin-left: 10px;" ng-click="searchMarkets()"><i
+                                class="fa fa-search"></i> {{'search'|translate}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-show="markets.length>0" style="overflow-y: auto; height: calc(100vh - 320px);">
+            <ul ui-sortable="sortableOptions" ng-model="markets" class="list-group gutter list-group-lg list-group-sp">
+                <li class="list-group-item padding-top-5 padding-bottom-10" style="margin-bottom: 0px; border-bottom: none; padding-left:10px"
+                    ng-repeat="market in markets" ng-dblclick="updateMarketTemplate(market)">
+                    <div class="pull-right">
+                        <button ng-show="permissions.includes('market_hide')||permissions.includes('super_admin')" class="btn btn-rounded btn-sm btn-icon btn-default"
+                            ng-click="showHideMarket(market)"><i class="fa" ng-class="{'fa-eye':market.status_id==1, 'fa-eye-slash':market.status_id==2}"></i></button>
+                        <button ng-show="permissions.includes('market_edit')||permissions.includes('super_admin')" class="btn btn-rounded btn-sm btn-icon btn-default"
+                            ng-click="updateMarketTemplate(market)"><i class="fa fa-edit"></i></button>
+                        <button ng-show="permissions.includes('market_mapping')||permissions.includes('super_admin')" class="btn btn-rounded btn-sm btn-icon btn-default"
+                            ng-click="updateMarketMapping(market)"><i class="fa fa-random"></i></button>
+                        <button ng-show="permissions.includes('market_delete')||permissions.includes('super_admin')" class="btn btn-rounded btn-sm btn-icon btn-default"
+                            ng-click="deleteMarket(market)"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                    <div class="pull-left">
+                        <i class="fa fa-reorder" style="color:#bdbdbd; margin-right:10px; margin-top:8px;"></i>
+                    </div>
+                    <div class="clear" style="margin-top:5px;">{{market.name}}</div>
+                </li>
+            </ul>
+        </div>
+        <label ng-show="markets.length==0" class="text-center text-muted full-width">{{'noMarketsNotFound'|translate}}</label>
+    </div>
+</div>

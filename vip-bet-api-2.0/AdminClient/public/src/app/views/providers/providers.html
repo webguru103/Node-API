@@ -1,0 +1,60 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.providers'|translate}}</h1>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="no-padding-right padding-left-5">
+            <div class="panel panel-default" style="height: calc(100vh - 200px);">
+                <div class="panel-body full-width">
+                    <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+                        <img src="/src/img/ring.svg" />
+                    </div>
+                    <div style="height: calc(100vh - 252px); overflow-y: auto" class="full-width">
+                        <table class="table m-b-none">
+                            <thead>
+                                <tr>
+                                    <th style="width:30px">{{"icon"|translate}}</th>
+                                    <th style="width:250px">{{"name"|translate}}</th>
+                                    <th style="text-align:center">{{"status"|translate}}</th>
+                                    <th ng-show="permissions.includes('provider_interval')||permissions.includes('super_admin')" style="text-align:center; width:250px">{{"interval"|translate}}</th>
+                                    <th style="width:130px">{{"action"|translate}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <ul ui-sortable="sortableOptions" ng-model="providers" class="list-group gutter list-group-lg list-group-sp">
+                            <li class="list-group-item" style="padding:0px !important; margin-bottom:0px; border:0px" ng-repeat="provider in providers">
+                                <table class="table m-b-none">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:30px">
+                                                <img ng-hide="provider.isImage" ng-src="{{provider.icon_url||'./uploads/default-logo.png'}}" style="float: left; width: 35px;"
+                                                    type="file" ngf-select ng-model="provider.icon" ngf-change="onImageChange($files, provider)"
+                                                    name="file" ngf-pattern="'image/*'" accept="image/*" ngf-max-size="20MB"
+                                                />
+                                                <img ng-show="provider.isImage" ngf-src="provider.icon" class="thumb" style="float: left; width: 35px;" type="file" ngf-select
+                                                    ng-model="provider.icon" ngf-change="onImageChange($files, provider)" name="file"
+                                                    ngf-pattern="'image/*'" accept="image/*" ngf-max-size="20MB">
+                                            </td>
+                                            <td style="width:250px; vertical-align:middle">{{provider.name}}</td>
+                                            <td style="text-align:center">{{providerStatus[provider.status_id]}}</td>
+                                            <td ng-show="permissions.includes('provider_interval')||permissions.includes('super_admin')" style="text-align:center; width:250px">
+                                                <input type="text" class="form-control" style="max-width:250px" ng-model="provider.interval" placeholder="{{'interval'|translate}} ...">
+                                            </td>
+                                            <td style="width:130px">
+                                                <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="updateProvider(provider)"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="restartProvider(provider)"><i class="fa fa-refresh"></i></button>
+                                                <button class="btn btn-rounded btn-sm btn-icon btn-default" ng-click="stopProvider(provider)"><i class="fa fa-stop"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                        <!--</tbody>-->
+                        <!--</table>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

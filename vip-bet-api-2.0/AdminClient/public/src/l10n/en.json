@@ -1,0 +1,282 @@
+{
+  "menu": {
+    "navigation": "Navigation",
+    "categories": "Categories",
+    "participants": "Participants",
+    "markets": "Markets",
+    "marketsTemplates": "Templates",
+    "marketGroups": "Groups",
+    "marketDisplayGroups": "Display Groups",
+    "combinationGroups": "Combination Groups",
+    "events": "Events",
+    "users": "Users",
+    "warnings": "Warnings",
+    "betslips": "Bet Slips",
+    "mapping": {
+      "mapping": "Mapping",
+      "warnings": "Warnings",
+      "participants": "Participants",
+      "leagues": "Leagues"
+    },
+    "settings": {
+      "settings": "Settings",
+      "general": "General",
+      "scopes": "Scopes",
+      "statisticTypes": "Statistic Types",
+      "resultRules": "Result Rules"
+    },
+    "providers": "Providers",
+    "admins": "Admins",
+    "results": "Results"
+  },
+  "admins": {
+    "details": "Admin Details",
+    "permissions": "Permissions",
+    "logs": "Logs",
+    "credentials": "Credentials"
+  },
+  "users": {
+    "details": "User Details",
+    "logs": "Logs",
+    "statistics": "Statistics",
+    "restrictions": "Restrictions"
+  },
+  "awaitingResult": "Awaiting Result",
+  "real": "Real",
+  "virtual": "Virtual",
+  "tipster": "Tipster",
+  "group": "Group",
+  "moneyType": "Money Type",
+  "isLobby": "Lobby",
+  "odd": "Odd",
+  "event": "Event",
+  "placed": "Placed",
+  "possibleWin": "Possible Win",
+  "wonAmount": "Won Amount",
+  "home": "Home",
+  "away": "Away",
+  "won": "Won",
+  "lost": "Lost",
+  "void": "Void",
+  "gotoEvent": "Go to Event",
+  "gotoResulting": "Go to Resulting",
+  "eventIsReadyForResulting": "Event is ready for resulting",
+  "eventIsNotReadyForResulting": "Event is not ready for resulting",
+  "statisticType": "Statistic Type",
+  "scope": "Scope",
+  "rule": "Rule",
+  "betslipsNotFound": "Bet Slips not found",
+  "scopesNotFound": "Scopes not found",
+  "statisticTypesNotFound": "Statistic types not found",
+  "multiWinnerMarket": "Multi Winner",
+  "providers": "Providers",
+  "betslipDetails": "Bet Slip Details",
+  "userId": "User ID",
+  "block": "Block",
+  "unblock": "Unblock",
+  "update": "Update",
+  "phone": "Phone",
+  "city": "City",
+  "address": "Address",
+  "lastLogin": "Last Login",
+  "blocked": "Blocked",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "registrationDate": "Reg. Date",
+  "password": "Password",
+  "email": "Email",
+  "forgetPassword": "Forgot password?",
+  "mapped": "Mapped",
+  "unmapped": "UnMap",
+  "status": "Status",
+  "hidden": "Hidden",
+  "updateMappings": "Update participants mappings for all providers",
+  "active": "Active",
+  "win": "Win",
+  "type": "Type",
+  "single": "Single",
+  "express": "Express",
+  "system": "System",
+  "events": "Events",
+  "halfWin": "Half Win",
+  "cancel": "Cancel",
+  "uncancel": "Uncancel",
+  "showActive": "Show Active",
+  "mergeWith": "Merge With",
+  "leagueMapping": "League Mapping",
+  "leaguesNotFound": "Leagues Not Found",
+  "participantsNotFound": "Participants Not Found",
+  "showUnmapped": "Show Unmapped",
+  "showHidden": "Show Hidden",
+  "participantsMapping": "Participants Mapping",
+  "systemParticipant": "System Participant",
+  "notMappedWith": "Not Mapped With",
+  "icon": "Icon",
+  "tipsterMarket": "Tipster Market",
+  "tipsterDefault": "Tipster Default",
+  "providerCategoryName": "Category Name",
+  "providerParentCategoryName": "Category Parent",
+  "market": "Market",
+  "warningsNotFound": "Warnings Not Found...",
+  "noMarkets": "No Markets",
+  "participant": "Participant",
+  "selection": "Selection",
+  "actions": "Actions",
+  "eventName": "Event Name",
+  "username": "User Name",
+  "dateRange": "Date Range",
+  "back": "Back",
+  "category": "Category",
+  "outcomeMappings": "Outcome Mappings",
+  "marketTemplates": "Market Templates",
+  "marketName": "Market Name",
+  "selectSport": "Select Sport",
+  "sport": "Sport",
+  "country": "Country",
+  "league": "League",
+  "leagues": "Leagues",
+  "subleague": "Subleague",
+  "add": "Add",
+  "mapping": "Mapping",
+  "delete": "Delete",
+  "name": "Name",
+  "save": "Save",
+  "edit": "Edit",
+  "search": "Search",
+  "existingMappings": "Mappings",
+  "selectProvider": "Select Provider",
+  "mappedWith": "Mapped With",
+  "provider": "Provider",
+  "systemObjectName": "System",
+  "providerObjectName": "Provider",
+  "details": "Details",
+  "selections": "Selections",
+  "addSelection": "Add Selection",
+  "addSelectionColumn": "Add Column",
+  "noMarketsNotFound": "Markets not found...",
+  "eventsNotFound": "Events not found...",
+  "adminsNotFound": "Admins not found...",
+  "usersNotFound": "Users not found...",
+  "all": "All",
+  "date": "Date",
+  "toastr": {
+    "added": "Added",
+    "updated": "Updated",
+    "mappingsUpdated": "Mappings updated",
+    "success": "Success",
+    "error": "Error",
+    "category": {
+      "categoryAdded": "Category Added",
+      "categoryDeleted": "Category Deleted",
+      "updated": "Category Updated"
+    },
+    "mapping": {
+      "mappingSaved": "Mappings Saved"
+    },
+    "market": {
+      "added": "Market Added",
+      "deleted": "Market Deleted",
+      "updated": "Market Updated"
+    },
+    "participants": {
+      "added": "Participant Added",
+      "updated": "Participant Updated",
+      "deleted": "Participant Deleted"
+    },
+    "providersOrderUpdated": "Sorting Saved"
+  },
+  "modals": {
+    "category": {
+      "deleteCategory": "Delete category ?",
+      "addCategory": "Add Category",
+      "categoryMapping": "Category Mapping",
+      "edit": "Edit Category"
+    },
+    "markets": {
+      "editMarketTemplate": "Edit Market Template",
+      "addMarketTemplate": "Add Market Template",
+      "editSelection": "Edit Selection",
+      "deleteMarketTemplate": "Delete this market?",
+      "marketMapping": "Market Mapping"
+    },
+    "participants": {
+      "add": "Add Participant",
+      "delete": "Delete Participant?",
+      "mapping": "Participant Mapping",
+      "update": "Update Participant",
+      "leagues": "Participant Leagues"
+    },
+    "admins": {
+      "add": "Add new admin"
+    }
+  },
+  "noParticipantsInSport": "There are no participants in this sport ...",
+  "header": {
+    "navbar": {
+      "UPLOAD": "Upload",
+      "new": {
+        "NEW": "New",
+        "PROJECT": "Projects",
+        "TASK": "Task",
+        "USER": "User",
+        "EMAIL": "Email"
+      },
+      "NOTIFICATIONS": "Notifications"
+    }
+  },
+  "aside": {
+    "nav": {
+      "HEADER": "Navigation",
+      "DASHBOARD": "Dashboard",
+      "CALENDAR": "Calendar",
+      "EMAIL": "Email",
+      "WIDGETS": "Widgets",
+      "components": {
+        "COMPONENTS": "Components",
+        "ui_kits": {
+          "UI_KITS": "UI Kits",
+          "BUTTONS": "Buttons",
+          "ICONS": "Icons",
+          "GRID": "Grid",
+          "BOOTSTRAP": "Bootstrap",
+          "SORTABLE": "Sortable",
+          "PORTLET": "Portlet",
+          "TIMELINE": "Timeline",
+          "VECTOR_MAP": "Vector Map"
+        },
+        "table": {
+          "TABLE": "Table",
+          "TABLE_STATIC": "Table static",
+          "DATATABLE": "Datatable",
+          "FOOTABLE": "Footable"
+        },
+        "form": {
+          "FORM": "Form",
+          "FORM_ELEMENTS": "Form elements",
+          "FORM_VALIDATION": "Form validation",
+          "FORM_WIZARD": "Form wizard"
+        },
+        "CHART": "Chart",
+        "pages": {
+          "PAGES": "Pages",
+          "PROFILE": "Profile",
+          "POST": "Post",
+          "SEARCH": "Search",
+          "INVOICE": "Invoice",
+          "LOCK_SCREEN": "Lock screen",
+          "SIGNIN": "Signin",
+          "SIGNUP": "Signup",
+          "FORGOT_PASSWORD": "Forgot password",
+          "404": "404"
+        }
+      },
+      "your_stuff": {
+        "YOUR_STUFF": "Your Stuff",
+        "PROFILE": "Profile",
+        "DOCUMENTS": "Documents"
+      }
+    },
+    "MILESTONE": "Milestone",
+    "RELEASE": "Release"
+  }
+}

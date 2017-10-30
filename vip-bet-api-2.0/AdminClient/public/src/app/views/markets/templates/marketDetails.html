@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-lg-7">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">{{'sport'|translate}}</label>
+            <div class="col-sm-8">
+                <ui-select ng-disabled="market.id!=null" ng-model="market.sport" theme="bootstrap" ng-change="onSportChange">
+                    <ui-select-match placeholder="Select ...">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in sports | filter: $select.search">
+                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">{{'marketName'|translate}}</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="{{'marketName'|translate}} ..." ng-model="market.name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">{{'scope'|translate}}</label>
+            <div class="col-sm-8">
+                <ui-select ng-model="market.scope" theme="bootstrap">
+                    <ui-select-match placeholder="Select ...">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in scopes | filter: $select.search">
+                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">{{'statisticType'|translate}}</label>
+            <div class="col-sm-8">
+                <ui-select ng-model="market.statisticType" theme="bootstrap">
+                    <ui-select-match placeholder="Select ...">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in statisticTypes | filter: $select.search">
+                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="form-group">
+            <label class="col-sm-8 control-label">{{'tipsterMarket'|translate}}</label>
+            <div class="col-sm-4" style="margin-bottom: 0px; padding-top: 5px;">
+                <label class="i-checks">
+                        <input type="checkbox" ng-model="market.is_tipster" checked=""><i></i>
+                    </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label ng-disabled="!market.is_tipster" class="col-sm-8 control-label">{{'tipsterDefault'|translate}}</label>
+            <div class="col-sm-4" style="margin-bottom: 0px; padding-top: 5px;">
+                <label class="i-checks">
+                        <input type="checkbox" ng-disabled="!market.is_tipster" ng-model="market.is_tipster_default" checked=""><i></i>
+                    </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-8 control-label">{{'multiWinnerMarket'|translate}}</label>
+            <div class="col-sm-4" style="margin-bottom: 0px; padding-top: 5px;">
+                <label class="i-checks">
+                        <input type="checkbox" ng-model="market.multi_winner" checked=""><i></i>
+                    </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-8 control-label">{{'active'|translate}}</label>
+            <div class="col-sm-4" style="margin-bottom: 0px; padding-top: 5px;">
+                <label class="i-checks">
+                        <input type="checkbox" ng-model="market.active" checked=""><i></i>
+                    </label>
+            </div>
+        </div>
+    </div>
+</div>

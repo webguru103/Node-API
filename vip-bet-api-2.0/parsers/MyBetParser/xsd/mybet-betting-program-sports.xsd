@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           xmlns:common="http://www.mybet.com/b2b/rest/jaxb/common"
+           xmlns="http://www.mybet.com/b2b/rest/jaxb/program/sport"
+           targetNamespace="http://www.mybet.com/b2b/rest/jaxb/program/sport">
+
+    <xs:import namespace="http://www.mybet.com/b2b/rest/jaxb/common" schemaLocation="mybet-common.xsd"/>
+
+    <xs:complexType name="sport-specific-details" abstract="true">
+        <xs:attribute name="match-score" type="score-type"/>
+    </xs:complexType>
+
+    <xs:complexType name="sport-specific-details-with-match-time" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details">
+                <xs:attribute name="match-time" type="xs:int">
+                    <xs:annotation>
+                        <xs:documentation>Match time in minutes. Only set for soccer, ice hockey, basketball and
+                            american football
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="set-score">
+        <xs:simpleContent>
+            <xs:extension base="score-type">
+                <xs:attribute name="set-number" type="xs:int"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="score-type">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[^:]+:[^:]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="soccer">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details-with-match-time">
+                <xs:sequence>
+                    <xs:annotation>
+                        <xs:documentation>Caution: Currently we cannot provide the player's name and the match time
+                            information for scores and cards yet.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:element name="card-count" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:int">
+                                    <xs:annotation>
+                                        <xs:documentation>The content of the element is the card count of the specified
+                                            color for the specified participant.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                    <xs:attribute name="participant-type" use="required"
+                                                  type="common:participant-enum"/>
+                                    <xs:attribute name="color" use="required" type="soccer-card-color-enum"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="card" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:token">
+                                    <xs:annotation>
+                                        <xs:documentation>The content of the element is the player's name who gets this
+                                            card.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                    <xs:attribute name="match-time" type="xs:duration"/>
+                                    <xs:attribute name="participant-type" use="required"
+                                                  type="common:participant-enum"/>
+                                    <xs:attribute name="color" use="required" type="soccer-card-color-enum"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="score" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="score-type">
+                                    <xs:attribute name="match-time" type="xs:duration"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="period" use="required" type="soccer-period-enum"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="soccer-period-enum">
+        <xs:annotation>
+            <xs:documentation>Translation ids of periods can be found in mybet-betting-program under
+                period elem with name attribute set to period name and sport-name attribute set to soccer.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="not started"/>
+            <xs:enumeration value="period 1"/>
+            <xs:enumeration value="period 2"/>
+            <xs:enumeration value="paused"/>
+            <xs:enumeration value="overtime period 1"/>
+            <xs:enumeration value="overtime period 2"/>
+            <xs:enumeration value="penalty"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="ended"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="soccer-card-color-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="red"/>
+            <xs:enumeration value="yellow"/>
+            <xs:enumeration value="yellow red"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="forthcoming-sport" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details">
+                <xs:sequence>
+                    <xs:any/>
+                </xs:sequence>
+                <xs:anyAttribute/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="tennis">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details">
+                <xs:sequence>
+                    <xs:element name="set-score" type="set-score" minOccurs="0" maxOccurs="5">
+                        <xs:annotation>
+                            <xs:documentation>3 or 5 sets, dependent on match-format.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="game-score" type="xs:token"/>
+                <xs:attribute name="tie-break" type="xs:boolean"/>
+                <xs:attribute name="server-participant-type" type="common:participant-enum">
+                    <xs:annotation>
+                        <xs:documentation>Contains a participant-enum.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="match-format" type="tennis-match-format-enum"/>
+                <xs:attribute name="period" use="required" type="tennis-period-enum"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="tennis-period-enum">
+        <xs:annotation>
+            <xs:documentation>Translation ids of periods can be found in mybet-betting-program under
+                period elem with name attribute set to period name and sport-name attribute set to tennis.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="not started"/>
+            <xs:enumeration value="set 1"/>
+            <xs:enumeration value="set 2"/>
+            <xs:enumeration value="set 3"/>
+            <xs:enumeration value="set 4"/>
+            <xs:enumeration value="set 5"/>
+            <xs:enumeration value="walkover"/>
+            <xs:enumeration value="retired"/>
+            <xs:enumeration value="delayed"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="ended"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="tennis-match-format-enum">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="best-of-3"/>
+            <xs:enumeration value="best-of-5"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ice-hockey">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details-with-match-time">
+                <xs:sequence>
+                    <xs:element name="set-score" type="set-score" minOccurs="0" maxOccurs="4">
+                        <xs:annotation>
+                            <xs:documentation>3 periods regular time plus overtime.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="period" use="required" type="ice-hockey-period-enum"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="ice-hockey-period-enum">
+        <xs:annotation>
+            <xs:documentation>Translation ids of periods can be found in mybet-betting-program under period elem with
+                name attribute set to period name and sport-name attribute set to ice-hockey.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="not started"/>
+            <xs:enumeration value="period 1"/>
+            <xs:enumeration value="period 2"/>
+            <xs:enumeration value="period 3"/>
+            <xs:enumeration value="paused"/>
+            <xs:enumeration value="overtime"/>
+            <xs:enumeration value="penalty"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="ended"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="basketball">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details-with-match-time">
+                <xs:sequence>
+                    <xs:element name="set-score" type="set-score" minOccurs="0" maxOccurs="5">
+                        <xs:annotation>
+                            <xs:documentation>4 quarters regular time plus overtime.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="period" use="required" type="basketball-period-enum"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="basketball-period-enum">
+        <xs:annotation>
+            <xs:documentation>Translation ids of periods can be found in mybet-betting-program under period elem with
+                name attribute set to period name and sport-name attribute set to basketball.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="not started"/>
+            <xs:enumeration value="quarter 1"/>
+            <xs:enumeration value="quarter 2"/>
+            <xs:enumeration value="quarter 3"/>
+            <xs:enumeration value="quarter 4"/>
+            <xs:enumeration value="paused"/>
+            <xs:enumeration value="overtime"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="ended"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="beach-volleyball">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details">
+                <xs:sequence>
+                    <xs:element name="set-score" type="set-score" minOccurs="0" maxOccurs="4">
+                        <xs:annotation>
+                            <xs:documentation>2 or 3 sets regular time plus golden set.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="game-score" type="xs:token"/>
+                <xs:attribute name="server-participant-type" type="common:participant-enum">
+                    <xs:annotation>
+                        <xs:documentation>Contains a participant-enum.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="period" use="required" type="beach-volleyball-period-enum"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="beach-volleyball-period-enum">
+        <xs:annotation>
+            <xs:documentation>Translation ids of periods can be found in mybet-betting-program under period elem with
+                name attribute set to period name and sport-name attribute set to beach-volleyball.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="not started"/>
+            <xs:enumeration value="set 1"/>
+            <xs:enumeration value="set 2"/>
+            <xs:enumeration value="set 3"/>
+            <xs:enumeration value="golden set"/>
+            <xs:enumeration value="paused"/>
+            <xs:enumeration value="walkover"/>
+            <xs:enumeration value="retired"/>
+            <xs:enumeration value="delayed"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="ended"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="volleyball">
+        <xs:complexContent>
+            <xs:extension base="sport-specific-details">
+                <xs:sequence>
+                    <xs:element name="set-score" type="set-score" minOccurs="0" maxOccurs="6">
+                        <xs:annotation>
+                            <xs:documentation>3 to 5 sets regular time plus golden set.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="game-score" type="xs:token"/>
+                <xs:attribute name="server-participant-type" type="common:participant-enum">
+                    <xs:annotation>
+                        <xs:documentation>Contains a participant-enum.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="period" use="required" type="volleyball-period-enum"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="volleyball-period-enum">
+        <xs:annotation>
+            <xs:documentation>Translation ids of periods can be found in mybet-betting-program under period elem with
+                name attribute set to period name and sport-name attribute set to volleyball.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="not started"/>
+            <xs:enumeration value="set 1"/>
+            <xs:enumeration value="set 2"/>
+            <xs:enumeration value="set 3"/>
+            <xs:enumeration value="set 4"/>
+            <xs:enumeration value="set 5"/>
+            <xs:enumeration value="golden set"/>
+            <xs:enumeration value="paused"/>
+            <xs:enumeration value="walkover"/>
+            <xs:enumeration value="retired"/>
+            <xs:enumeration value="delayed"/>
+            <xs:enumeration value="interrupted"/>
+            <xs:enumeration value="ended"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="baseball">
+        <xs:complexContent>
+            <xs:extension base="forthcoming-sport"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="american-football">
+        <xs:complexContent>
+            <xs:extension base="forthcoming-sport"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="handball">
+        <xs:complexContent>
+            <xs:extension base="forthcoming-sport"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,97 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.events'|translate}}</h1>
+</div>
+<div class="wrapper-md padding-top-5">
+    <div class="row">
+        <div class="panel panel-default margin-bottom-5">
+            <div class="panel-body no-padding-bottom">
+                <form role="form">
+                    <div class="col-lg-4 no-padding-left">
+                        <label>{{'sport'|translate}}</label>
+                        <ui-select ng-model="filter.sport" on-select="onSportChange($item)" theme="bootstrap">
+                            <ui-select-match placeholder="{{'select'|translate}}...">
+                                {{$select.selected.name|translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in sports | filter: $select.search">
+                                <span ng-bind-html="item.name|translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-4 no-padding-left">
+                        <label>{{'country'|translate}}</label>
+                        <ui-select ng-model="filter.country" on-select="onCountryChange($item)" theme="bootstrap">
+                            <ui-select-match placeholder="{{'select'|translate}}...">
+                                {{$select.selected.name|translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in countries | filter: $select.search">
+                                <span ng-bind-html="item.name|translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-4 no-padding-left">
+                        <label>{{'league'|translate}}</label>
+                        <ui-select ng-model="filter.league" theme="bootstrap">
+                            <ui-select-match placeholder="{{'select'|translate}}...">
+                                {{$select.selected.name|translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in leagues | filter: $select.search">
+                                <span ng-bind-html="item.name|translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-4 no-padding-left">
+                        <label>{{'dateRange'|translate}}</label>
+                        <input date-range-picker placeholder="{{'dateRange'|translate}}" class="form-control date-picker" type="text" options="{autoApply}"
+                            ng-model="datePicker.date" />
+                    </div>
+                    <div class="form-group col-lg-4 no-padding-left">
+                        <label>{{'eventName'|translate}}</label>
+                        <input type="text" class="form-control" ng-model="filter.eventName" placeholder="{{'eventName'|translate}} ...">
+                    </div>
+                    <button class="btn btn-sm btn-primary pull-right pull-right margin-right-15 margin-bottom-15" ng-click="searchEvents()"><i
+                                class="fa fa-search"></i> {{'search'|translate}}
+                        </button>
+                </form>
+            </div>
+        </div>
+        <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+            <img src="/src/img/ring.svg" />
+        </div>
+        <div class="panel panel-default" style="overflow-y: auto; height: calc(100vh - 378px); margin-bottom: 5px" ng-show="events.length>0">
+            <table class="table table-striped m-b-none">
+                <thead>
+                    <tr>
+                        <th style="width: 9%; min-width: 125px;">{{'date'|translate}}</th>
+                        <th style="width: 25%;">{{'category'|translate}}</th>
+                        <th style="width: 25%;">{{'name'|translate}}</th>
+                        <th>{{'providers'|translate}}</th>
+                        <th style="width: 1px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="event in events" ng-class="{'row-selected':event.selected}" ng-click="selectEvent(event)" class="table-row-md text-sm">
+                        <td>{{event.start_date | date:'dd-MM-yyyy HH:mm'}}</td>
+                        <td>{{::event.sport_name}} / {{::event.country_name}} / {{::event.league_name}}
+                        </td>
+                        <td>{{event.name}}</td>
+                        <td>
+                            <div ng-repeat="provider in event.providers" class="provider-top-icon">
+                                <img style="width: 15px" ng-src="{{provider.icon_url}}">
+                            </div>
+                        </td>
+                        <td>
+                            <button ui-sref="{{::'app.events.event({eventId:'+event.id+'})'}}" class="btn btn-rounded btn-sm btn-icon btn-default">
+                            <span>+{{::event.markets_count}}</span>
+                        </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center" ng-show="events.length>0">
+            <pagination direction-links="false" total-items="filter.totalItems" items-per-page="filter.perPage" ng-model="filter.currentPage"
+                num-pages="filter.maxPages" ng-change="onPageChange()" class="m-t-none m-b pagination-2 "></pagination>
+        </div>
+        <label ng-show="events.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'eventsNotFound'|translate}}</label>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+<div class="bg-light lter b-b wrapper-md" style="height:67px">
+    <h1 class="m-n font-thin h3" style="float:left">{{'participantsMapping'|translate}}</h1>
+    <button title="{{'updateMappings'|translate}}" class="btn btn-sm btn-success pull-left btn-rounded btn-icon" style="float: left !important; margin-left: 15px;"
+        ng-click="updateParticipantMappings()"><i class="fa fa-refresh"></i></button>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="panel panel-default" style="margin-bottom:5px">
+            <div class="panel-body">
+                <form role="form">
+                    <div class="col-lg-3 no-padding-left no-padding-right">
+                        <label>{{'sport'|translate}}</label>
+                        <ui-select ng-init="filter.sport=sports[0];" ng-model="filter.sport" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in sports | filter: $select.search">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-lg-3 no-padding-right">
+                        <label>{{'provider'|translate}}</label>
+                        <ui-select ng-init="filter.provider=providers[0]; findParticipants();" ng-model="filter.provider" theme="bootstrap">
+                            <ui-select-match placeholder="Select ...">
+                                {{$select.selected.name | translate}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in providers | filter: $select.search">
+                                <span ng-bind-html="item.name | translate | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-lg-3">
+                        <label class="i-checks" style="margin-top: 31px; float: left; margin-right: 5px;">
+                            <input type="checkbox" ng-model="filter.unmapped"><i></i>{{'showUnmapped'|translate}}
+                        </label>
+                        <button class="btn btn-sm btn-primary margin-left-5" style="margin-top:27px" ng-click="findParticipants()">
+                            <i class="fa fa-search"></i> {{'search'|translate}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div style="position: absolute; left: 50%; top: 50%;" ng-show="loading">
+            <img src="/src/img/ring.svg" />
+        </div>
+        <div class="panel panel-default" ng-show="participants.length>0" style="overflow-y: auto; height: calc(100vh - 335px); margin-bottom:5px">
+            <table class="table table-striped m-b-none">
+                <thead>
+                    <tr>
+                        <th style="width:50%">{{'name'|translate}}</th>
+                        <th style="width:50%">{{'systemParticipant'|translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="participant in participants" class="table-row-md text-sm">
+                        <td>{{participant.provider_participant_name}}</td>
+                        <td>
+                            <button class="btn btn-rounded btn-sm btn-icon btn-default margin-right-5" style="float: left;" ng-click="unmapParticipant(participant)"><i class="fa fa-trash-o"></i>
+                            </button>
+                            <ui-select ng-model="participant.systemParticipant" on-select="mapParticipant(participant)" theme="bootstrap" style="float: left; max-width: calc(100% - 35px); width: calc(100% - 35px);">
+                                <ui-select-match placeholder="Select ...">
+                                    {{$select.selected.name | translate}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in participant.searchResult | filter: $select.search" refresh="searchParticipant($select, participant, filter.sport.id)"
+                                    refresh-delay="500">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center" ng-show="participants.length>0">
+            <pagination direction-links="false" total-items="filter.totalItems" items-per-page="filter.perPage" ng-model="filter.currentPage"
+                num-pages="filter.maxPages" ng-change="onPageChange()" class="m-t-none m-b pagination-2 "></pagination>
+        </div>
+        <label ng-show="participants.length==0&&!loading" class="text-muted" style="position: absolute; top: 50%; left: 50%; width: initial;">{{'participantsNotFound'|translate}}</label>
+    </div>
+</div>

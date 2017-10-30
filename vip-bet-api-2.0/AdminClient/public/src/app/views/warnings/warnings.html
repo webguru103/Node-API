@@ -1,0 +1,17 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">{{'menu.warnings'|translate}}</h1>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="tab-container">
+            <ul class="nav nav-tabs">
+                <li ng-repeat="tab in tabs" ui-sref-active="active">
+                    <a ui-sref="{{tab.url}}">{{tab.title|translate}} <span ng-show="warningsCounts[tab.type]>0" class="badge bg-danger badge-sm m-l-xs">{{warningsCounts[tab.type]}}</span></a>
+                </li>
+            </ul>
+            <div class="tab-content no-padding-bottom" style="height: calc(100vh - 235px);">
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
+</div>
