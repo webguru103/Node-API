@@ -15,7 +15,7 @@
     "jsonwebtoken": "^7.4.3",
     "knex": ">=0.19.5",
     "lodash": "^4.17.4",
-    "passport": "^0.3.2",
+    "passport": "^0.6.0",
     "passport-jwt": "^2.2.1",
     "passport-wordpress": "0.0.4",
     "pg-promise": "^6.8.0",
